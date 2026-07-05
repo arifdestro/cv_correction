@@ -468,6 +468,9 @@
   font-weight: 600;
   font-size: var(--text-sm);
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .category-detail {
@@ -484,8 +487,8 @@
 }
 
 .category-bar {
-  width: 120px;
-  flex-shrink: 0;
+  width: 100px;
+  flex-shrink: 1;
 }
 
 /* --- Recommendation Cards --- */
