@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Professional CV Assessment Tool — Evaluate your resume against international hiring standards with strict scoring across 8 categories. Get actionable recommendations to improve your CV.">
+  <meta name="keywords" content="CV assessment, resume checker, ATS scorer, resume review, CV grading, professional resume evaluation">
+  <meta name="author" content="CV Assessment Pro">
+  <title>CV Assessment Pro — Professional Resume Evaluator</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- ===== Header ===== -->
+    <header class="header" id="header">
+      <div class="header-logo">
+        <div class="header-logo-icon">📄</div>
+        <span class="header-logo-text">
+          CV Assessment <span class="text-gradient">Pro</span>
+          <span class="header-logo-badge">v1.0</span>
+        </span>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-ghost btn-sm" id="btn-settings" aria-label="Settings">
+          ⚙️ Settings
+        </button>
+        <button class="theme-toggle" id="btn-theme" aria-label="Toggle theme">
+          🌙
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== Main Content ===== -->
+    <main class="main" id="main-content">
+
+      <!-- === Upload Section === -->
+      <section class="section" id="section-upload">
+        <div class="hero animate-fade-in-up">
+          <div class="hero-badge">
+            <span>🏆</span>
+            <span>Professional-Grade Assessment</span>
+          </div>
+          <h1 class="hero-title">
+            How strong is your <span class="text-gradient">CV</span>?
+          </h1>
+          <p class="hero-subtitle">
+            Upload your resume and get an instant, brutally honest assessment based on international hiring standards. Scored across 8 critical categories.
+          </p>
+        </div>
+
+        <!-- Upload Area -->
+        <div class="upload-area animate-fade-in-up stagger-2" id="upload-area">
+          <input type="file" id="file-input" class="sr-only" accept=".pdf,.docx,.doc,.txt">
+          <span class="upload-icon">📤</span>
+          <h2 class="upload-title">Drop your CV here</h2>
+          <p class="upload-subtitle">or click to browse files</p>
+          <div class="upload-formats">
+            <span class="format-tag">📕 PDF</span>
+            <span class="format-tag">📘 DOCX</span>
+            <span class="format-tag">📝 TXT</span>
+          </div>
+        </div>
+
+        <!-- File Info (shown after upload) -->
+        <div class="file-info" id="file-info" style="display: none;">
+          <span class="file-icon">📎</span>
+          <div class="file-details">
+            <div class="file-name" id="file-name">document.pdf</div>
+            <div class="file-size" id="file-size">1.2 MB</div>
+          </div>
+          <button class="btn btn-primary" id="btn-analyze">
+            🔍 Analyze CV
+          </button>
+          <button class="btn btn-ghost btn-sm" id="btn-remove-file" aria-label="Remove file">
+            ✕
+          </button>
+        </div>
+      </section>
+
+      <!-- === Analysis Loading === -->
+      <section class="analysis-loading" id="section-loading">
+        <div class="spinner spinner-lg" style="margin: 0 auto var(--space-6);"></div>
+        <h2 class="section-title">Analyzing your CV...</h2>
+        <p class="section-subtitle" style="margin: 0 auto;">This takes a few seconds. We're checking every detail.</p>
+        <div class="loading-steps">
+          <div class="loading-step" id="step-parse">
+            <span class="loading-step-icon">⏳</span>
+            <span>Extracting text from document</span>
+          </div>
+          <div class="loading-step" id="step-format">
+            <span class="loading-step-icon">⏳</span>
+            <span>Evaluating format & layout</span>
+          </div>
+          <div class="loading-step" id="step-content">
+            <span class="loading-step-icon">⏳</span>
+            <span>Analyzing content quality</span>
+          </div>
+          <div class="loading-step" id="step-ats">
+            <span class="loading-step-icon">⏳</span>
+            <span>Checking ATS compatibility</span>
+          </div>
+          <div class="loading-step" id="step-recommend">
+            <span class="loading-step-icon">⏳</span>
+            <span>Generating recommendations</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- === Results Section === -->
+      <section class="results-container" id="section-results">
+
+        <!-- Results Header -->
+        <div class="results-header">
+          <div>
+            <h2 class="section-title">Assessment Results</h2>
+            <p class="section-subtitle">Detailed breakdown of your CV evaluation</p>
+          </div>
+          <div style="display: flex; gap: var(--space-3);">
+            <button class="btn btn-secondary btn-sm" id="btn-new-analysis">
+              📤 New Analysis
+            </button>
+            <button class="btn btn-primary btn-sm" id="btn-export">
+              📑 Export Report
+            </button>
+          </div>
+        </div>
+
+        <!-- Results Grid -->
+        <div class="results-grid">
+
+          <!-- Sidebar: Overall Score -->
+          <div class="results-sidebar">
+            <div class="card-elevated score-summary" id="score-summary">
+              <div class="grade-container">
+                <div class="grade-badge grade-badge-lg" id="grade-badge">B</div>
+              </div>
+              <div class="score-circle" id="score-circle">
+                <canvas id="score-canvas" width="400" height="400"></canvas>
+                <div class="score-value">
+                  <span class="score-number" id="score-number">0</span>
+                  <span class="score-label">out of 100</span>
+                </div>
+              </div>
+              <div class="score-meta">
+                <div class="score-meta-item">
+                  <div class="score-meta-value" id="meta-strengths">0</div>
+                  <div class="score-meta-label">Strengths</div>
+                </div>
+                <div class="score-meta-item">
+                  <div class="score-meta-value" id="meta-issues">0</div>
+                  <div class="score-meta-label">Issues</div>
+                </div>
+                <div class="score-meta-item">
+                  <div class="score-meta-value" id="meta-region">US</div>
+                  <div class="score-meta-label">Standard</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Category Scores -->
+            <div class="card" style="margin-top: var(--space-4);">
+              <h3 style="font-size: var(--text-sm); font-weight: 700; margin-bottom: var(--space-4); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--text-tertiary);">
+                Score Breakdown
+              </h3>
+              <div class="categories-list" id="categories-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Content: Details & Recommendations -->
+          <div class="results-main">
+            <!-- Tabs -->
+            <div class="tabs" style="margin-bottom: var(--space-6);">
+              <button class="tab active" data-tab="details" id="tab-details">📊 Detailed Scores</button>
+              <button class="tab" data-tab="recommendations" id="tab-recommendations">💡 Recommendations</button>
+            </div>
+
+            <!-- Details Tab -->
+            <div id="panel-details">
+              <div id="details-container">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Recommendations Tab -->
+            <div id="panel-recommendations" style="display: none;">
+              <div class="recommendations-list" id="recommendations-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ===== Settings Panel ===== -->
+    <div class="settings-overlay" id="settings-overlay"></div>
+    <aside class="settings-panel" id="settings-panel">
+      <div class="settings-header">
+        <h2 class="settings-title">⚙️ Settings</h2>
+        <button class="btn btn-ghost btn-icon" id="btn-close-settings" aria-label="Close settings">✕</button>
+      </div>
+
+      <!-- Region Setting -->
+      <div class="settings-group">
+        <div class="settings-group-title">Regional Standard</div>
+        <p class="settings-desc" style="margin-bottom: var(--space-3);">
+          Different regions have different CV/resume expectations. Choose your target market.
+        </p>
+        <div class="region-selector" id="region-selector">
+          <button class="region-option active" data-region="US">
+            <span class="region-flag">🇺🇸</span> US / Canada
+          </button>
+          <button class="region-option" data-region="UK">
+            <span class="region-flag">🇬🇧</span> UK / Ireland
+          </button>
+          <button class="region-option" data-region="EU">
+            <span class="region-flag">🇪🇺</span> Europe (DACH)
+          </button>
+          <button class="region-option" data-region="ASIA">
+            <span class="region-flag">🌏</span> Asia Pacific
+          </button>
+        </div>
+      </div>
+
+      <!-- Theme Setting -->
+      <div class="settings-group">
+        <div class="settings-group-title">Appearance</div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-label">Dark Mode</div>
+            <div class="settings-desc">Easier on the eyes at night</div>
+          </div>
+          <div class="toggle active" id="toggle-theme"></div>
+        </div>
+      </div>
+
+      <!-- Strictness Setting -->
+      <div class="settings-group">
+        <div class="settings-group-title">Scoring Strictness</div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-label">Strict Mode</div>
+            <div class="settings-desc">Extra harsh scoring for top-tier applications</div>
+          </div>
+          <div class="toggle active" id="toggle-strict"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===== Footer ===== -->
+    <footer class="footer">
+      <p>CV Assessment Pro — Your CV never leaves your browser. 100% client-side analysis.</p>
+    </footer>
+
+    <!-- ===== Toast Container ===== -->
+    <div class="toast-container" id="toast-container"></div>
+
+  </div>
+
+  <!-- === External Libraries (CDN) === -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+  <!-- === Application Scripts === -->
+  <script src="js/data/action-verbs.js"></script>
+  <script src="js/data/common-errors.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/criteria/format-scorer.js"></script>
+  <script src="js/criteria/contact-scorer.js"></script>
+  <script src="js/criteria/summary-scorer.js"></script>
+  <script src="js/criteria/experience-scorer.js"></script>
+  <script src="js/criteria/education-scorer.js"></script>
+  <script src="js/criteria/skills-scorer.js"></script>
+  <script src="js/criteria/language-scorer.js"></script>
+  <script src="js/criteria/ats-scorer.js"></script>
+  <script src="js/scoring-engine.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/recommendations.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
