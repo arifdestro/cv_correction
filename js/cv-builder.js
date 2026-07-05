@@ -17,11 +17,13 @@ window.CVBuilder = class CVBuilder {
   bindEvents() {
     const btnBuild = document.getElementById('btn-build-cv');
     const btnBack = document.getElementById('btn-builder-back');
-    const btnDownload = document.getElementById('btn-builder-download');
+    const btnWord = document.getElementById('btn-builder-download-word');
+    const btnPdf = document.getElementById('btn-builder-download-pdf');
 
     if (btnBuild) btnBuild.addEventListener('click', () => this.open(window.app.currentCvData, window.app.currentResults));
     if (btnBack) btnBack.addEventListener('click', () => this.close());
-    if (btnDownload) btnDownload.addEventListener('click', () => this.download());
+    if (btnWord) btnWord.addEventListener('click', () => this.downloadWord());
+    if (btnPdf) btnPdf.addEventListener('click', () => this.downloadPDF());
   }
 
   // ── Open Builder ──────────────────────────────
@@ -299,7 +301,7 @@ window.CVBuilder = class CVBuilder {
 
   // ── Download ──────────────────────────────────
 
-  download() {
+  downloadPDF() {
     const sections = this.collectData();
     const htmlFragment = this.generateHTML(sections);
     
@@ -311,17 +313,114 @@ window.CVBuilder = class CVBuilder {
 
     if (window.app) window.app.showToast('Opening print dialog. Save as PDF!', '📄');
     
-    // Inject content
     printArea.innerHTML = htmlFragment;
     
-    // Slight delay to ensure styles/fonts are applied before printing
     setTimeout(() => {
       window.print();
-      // Clean up after print dialog closes
       setTimeout(() => {
         printArea.innerHTML = '';
       }, 1000);
     }, 300);
+  }
+
+  // ── Download Word ─────────────────────────────
+
+  downloadWord() {
+    const sections = this.collectData();
+    const htmlFragment = this.generateHTML(sections);
+
+    // Wrap in a Word-compatible HTML document with XML namespaces
+    const wordHTML = `<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!--[if gte mso 9]>
+  <xml>
+    <w:WordDocument>
+      <w:View>Print</w:View>
+      <w:Zoom>100</w:Zoom>
+      <w:DoNotOptimizeForBrowser/>
+    </w:WordDocument>
+  </xml>
+  <![endif]-->
+  <style>
+    @page {
+      size: A4;
+      margin: 2.54cm;
+    }
+    body {
+      font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+      font-size: 11pt;
+      color: #2d2d3a;
+      line-height: 1.5;
+    }
+    h1 {
+      font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+      font-size: 22pt;
+      font-weight: bold;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+    h2 {
+      font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+      font-size: 12pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #6c63ff;
+      border-bottom: 2px solid #6c63ff;
+      padding-bottom: 4px;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+    p {
+      margin: 2px 0;
+    }
+    ul {
+      margin: 4px 0 8px 18px;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 3px;
+    }
+    .contact-bar {
+      font-size: 10pt;
+      color: #555;
+      margin-bottom: 16px;
+    }
+    .contact-bar a {
+      color: #6c63ff;
+      text-decoration: none;
+    }
+    table {
+      border-collapse: collapse;
+    }
+  </style>
+</head>
+<body>
+  ${htmlFragment}
+</body>
+</html>`;
+
+    // Create blob with Word MIME type
+    const blob = new Blob(['\ufeff' + wordHTML], {
+      type: 'application/msword'
+    });
+
+    // Trigger download
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Improved-CV.doc';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+    if (window.app) window.app.showToast('Word document downloaded! Open in Word to edit.', '✅');
   }
 
   // ── Helpers ───────────────────────────────────
