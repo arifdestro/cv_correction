@@ -262,36 +262,24 @@ window.CVBuilder = class CVBuilder {
       `;
     };
 
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${this._escapeHTML(name)} — Resume</title>
-  <style>
+    return `<style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
+    #print-area * { box-sizing: border-box; }
+    #print-area {
       font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
       color: #2d2d3a;
       background: #fff;
       max-width: 800px;
       margin: 0 auto;
-      padding: 40px 50px;
       line-height: 1.5;
     }
-    h1 { font-size: 24pt; font-weight: 800; color: #1a1a2e; margin-bottom: 4px; }
-    .contact-bar { font-size: 10pt; color: #555; margin-bottom: 20px; word-break: break-all; }
-    .contact-bar a { color: #6c63ff; text-decoration: none; }
-    ul { list-style-type: disc; }
-    li { margin-bottom: 3px; }
-    @media print {
-      body { padding: 20px 30px; max-width: 100%; }
-      @page { margin: 0.6in; size: A4; }
-    }
+    #print-area h1 { font-size: 24pt; font-weight: 800; color: #1a1a2e; margin-bottom: 4px; }
+    #print-area .contact-bar { font-size: 10pt; color: #555; margin-bottom: 20px; word-break: break-all; }
+    #print-area .contact-bar a { color: #6c63ff; text-decoration: none; }
+    #print-area ul { list-style-type: disc; }
+    #print-area li { margin-bottom: 3px; }
   </style>
-</head>
-<body>
+
   <header>
     <h1>${this._escapeHTML(name)}</h1>
     <div class="contact-bar">
@@ -306,63 +294,34 @@ window.CVBuilder = class CVBuilder {
   ${sectionHTML('Professional Experience', sections.experience)}
   ${sectionHTML('Education', sections.education)}
   ${sectionHTML('Skills', sections.skills)}
-  ${sectionHTML('Additional', sections.other)}
-
-</body>
-</html>`;
+  ${sectionHTML('Additional', sections.other)}`;
   }
 
   // ── Download ──────────────────────────────────
 
   download() {
     const sections = this.collectData();
-    const html = this.generateHTML(sections);
-
-    if (typeof html2pdf !== 'undefined') {
-      if (window.app) window.app.showToast('Generating PDF...', '⏳');
-      const opt = {
-        margin:       [0.6, 0.6, 0.6, 0.6],
-        filename:     'Improved-CV.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(html).save().then(() => {
-        if (window.app) window.app.showToast('PDF downloaded successfully!', '✅');
-      }).catch(err => {
-        console.error('PDF generation failed:', err);
-        this._fallbackDownload(html);
-      });
-    } else {
-      this._fallbackDownload(html);
-    }
-  }
-
-  _fallbackDownload(html) {
-    // Open in new tab for print/save as fallback
-    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const win = window.open(url, '_blank');
-
-    if (win) {
-      // Auto-trigger print after load
-      win.addEventListener('load', () => {
-        setTimeout(() => win.print(), 600);
-      });
-      if (window.app) window.app.showToast('CV opened in new tab — use Print → Save as PDF', '📥');
-    } else {
-      // Fallback: direct download as HTML
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'improved-cv.html';
-      a.click();
-      if (window.app) window.app.showToast('CV downloaded as HTML. Open in browser and print to PDF.', '📥');
+    const htmlFragment = this.generateHTML(sections);
+    
+    const printArea = document.getElementById('print-area');
+    if (!printArea) {
+      if (window.app) window.app.showToast('Print area not found.', '⚠️');
+      return;
     }
 
-    setTimeout(() => URL.revokeObjectURL(url), 30000);
-  }
-
+    if (window.app) window.app.showToast('Opening print dialog. Save as PDF!', '📄');
+    
+    // Inject content
+    printArea.innerHTML = htmlFragment;
+    
+    // Slight delay to ensure styles/fonts are applied before printing
+    setTimeout(() => {
+      window.print();
+      // Clean up after print dialog closes
+      setTimeout(() => {
+        printArea.innerHTML = '';
+      }, 1000);
+    }, 300);
   // ── Helpers ───────────────────────────────────
 
   _escapeHTML(str) {

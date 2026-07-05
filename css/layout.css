@@ -628,3 +628,32 @@
 .points-positive { color: var(--accent-500); }
 .points-negative { color: var(--danger-500); }
 .points-neutral { color: var(--text-tertiary); }
+
+/* --- Print Area for CV Builder --- */
+#print-area {
+  display: none;
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  
+  #app {
+    display: none !important;
+  }
+  
+  #print-area {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  @page {
+    margin: 0.6in;
+    size: A4;
+  }
+}
