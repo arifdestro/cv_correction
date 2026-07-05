@@ -180,21 +180,10 @@ window.Dashboard = class Dashboard {
     if (!this.categoriesList) return;
     this.categoriesList.innerHTML = '';
 
-    const icons = {
-      'Format & Layout': '📐',
-      'Contact Information': '📇',
-      'Professional Summary': '📝',
-      'Work Experience': '💼',
-      'Education': '🎓',
-      'Skills': '🛠️',
-      'Language & Grammar': '📖',
-      'ATS Compatibility': '🤖'
-    };
-
     categories.forEach((cat, index) => {
       const pct = cat.maxScore > 0 ? (cat.score / cat.maxScore) * 100 : 0;
       const colorClass = this._getProgressClass(pct);
-      const icon = icons[cat.name] || '📊';
+      const icon = cat.icon || '📊';
 
       const row = document.createElement('div');
       row.className = 'category-row animate-fade-in-up';
@@ -238,20 +227,9 @@ window.Dashboard = class Dashboard {
     if (!this.detailsContainer) return;
     this.detailsContainer.innerHTML = '';
 
-    const icons = {
-      'Format & Layout': '📐',
-      'Contact Information': '📇',
-      'Professional Summary': '📝',
-      'Work Experience': '💼',
-      'Education': '🎓',
-      'Skills': '🛠️',
-      'Language & Grammar': '📖',
-      'ATS Compatibility': '🤖'
-    };
-
     categories.forEach((cat, catIdx) => {
       const pct = cat.maxScore > 0 ? (cat.score / cat.maxScore) * 100 : 0;
-      const icon = icons[cat.name] || '📊';
+      const icon = cat.icon || '📊';
 
       const panel = document.createElement('div');
       panel.className = 'detail-panel animate-fade-in-up';
@@ -262,17 +240,20 @@ window.Dashboard = class Dashboard {
 
       if (cat.details && cat.details.length > 0) {
         cat.details.forEach(detail => {
-          const passed = detail.earned > 0;
-          const statusIcon = passed ? '✅' : '❌';
-          const pointsClass = passed ? 'points-positive' : (detail.earned === 0 && detail.max === 0 ? 'points-neutral' : 'points-negative');
+          const passed = detail.points > 0;
+          const statusIcon = detail.passed ? '✅' : '❌';
+          const pointsClass = passed ? 'points-positive' : (detail.points === 0 && detail.maxPoints === 0 ? 'points-neutral' : 'points-negative');
           const pointsText = passed
-            ? `+${detail.earned}`
-            : (detail.max > 0 ? `0/${detail.max}` : '—');
+            ? `+${detail.points}`
+            : (detail.maxPoints > 0 ? `0/${detail.maxPoints}` : '—');
 
           criteriaHTML += `
             <div class="detail-criterion">
               <span class="detail-criterion-icon">${statusIcon}</span>
-              <span class="detail-criterion-text">${detail.label}</span>
+              <span class="detail-criterion-text">
+                <strong>${detail.criterion}</strong><br>
+                <span style="font-size: 0.85em; color: var(--text-tertiary);">${detail.explanation || ''}</span>
+              </span>
               <span class="detail-criterion-points ${pointsClass}">${pointsText}</span>
             </div>
           `;
@@ -281,7 +262,7 @@ window.Dashboard = class Dashboard {
         criteriaHTML = `
           <div class="detail-criterion">
             <span class="detail-criterion-icon">ℹ️</span>
-            <span class="detail-criterion-text" style="color: var(--text-tertiary);">No detailed breakdown available</span>
+            <span class="detail-criterion-text">No detailed breakdown available</span>
             <span class="detail-criterion-points points-neutral">—</span>
           </div>
         `;
@@ -391,7 +372,7 @@ window.Dashboard = class Dashboard {
     let count = 0;
     categories.forEach(cat => {
       if (cat.details) {
-        cat.details.forEach(d => { if (d.earned > 0) count++; });
+        cat.details.forEach(d => { if (d.passed) count++; });
       }
     });
     return count;
@@ -401,7 +382,7 @@ window.Dashboard = class Dashboard {
     let count = 0;
     categories.forEach(cat => {
       if (cat.details) {
-        cat.details.forEach(d => { if (d.earned === 0 && d.max > 0) count++; });
+        cat.details.forEach(d => { if (!d.passed && d.maxPoints > 0) count++; });
       }
     });
     return count;

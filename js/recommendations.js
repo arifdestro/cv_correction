@@ -220,10 +220,10 @@ window.RecommendationsEngine = class RecommendationsEngine {
       });
     }
 
-    if (cats['Language & Grammar'] && cats['Language & Grammar'].score < cats['Language & Grammar'].maxScore * 0.5) {
+    if (cats['Language & Writing'] && cats['Language & Writing'].score < cats['Language & Writing'].maxScore * 0.5) {
       recs.push({
         priority: 'important',
-        category: 'Language & Grammar',
+        category: 'Language & Writing',
         title: 'Fix grammar and language issues',
         body: 'Multiple language issues were detected. Spelling errors and grammar mistakes are among the top reasons recruiters reject CVs. Use a tool like Grammarly or have a friend proofread your document. Write in third person and use past tense for previous roles.',
         icon: '📖'

@@ -152,7 +152,8 @@ window.App = class App {
 
       // Run the scoring engine
       const settings = this.settings.getSettings();
-      const results = this.engine.score(cvData, settings);
+      const results = this.engine.analyze(cvData, settings);
+      results.cvData = cvData;  // attach cvData for recommendations engine
       this.currentResults = results;
 
       await this._updateStep('step-ats', 'done');
