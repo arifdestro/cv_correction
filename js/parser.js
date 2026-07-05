@@ -8,8 +8,12 @@ window.FileParser = class FileParser {
   constructor() {
     // Configure PDF.js worker
     if (typeof pdfjsLib !== 'undefined') {
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      try {
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      } catch (e) {
+        console.warn('PDF.js worker config failed, will use workerless mode:', e);
+      }
     }
 
     // Section header patterns grouped by semantic meaning
@@ -81,6 +85,9 @@ window.FileParser = class FileParser {
   // ── PDF Extraction ────────────────────────────
 
   async extractPDF(file) {
+    if (typeof pdfjsLib === 'undefined') {
+      throw new Error('PDF.js library failed to load. Please use a local server (e.g., VS Code Live Server) instead of opening the file directly, or upload a .txt / .docx file instead.');
+    }
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
     const pages = [];
@@ -98,6 +105,9 @@ window.FileParser = class FileParser {
   // ── DOCX Extraction ───────────────────────────
 
   async extractDOCX(file) {
+    if (typeof mammoth === 'undefined') {
+      throw new Error('Mammoth.js library failed to load. Please use a local server (e.g., VS Code Live Server) instead of opening the file directly, or upload a .txt file instead.');
+    }
     const arrayBuffer = await file.arrayBuffer();
     const result = await mammoth.extractRawText({ arrayBuffer });
     return result.value;
