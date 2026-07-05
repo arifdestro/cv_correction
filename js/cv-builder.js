@@ -322,6 +322,8 @@ window.CVBuilder = class CVBuilder {
         printArea.innerHTML = '';
       }, 1000);
     }, 300);
+  }
+
   // ── Helpers ───────────────────────────────────
 
   _escapeHTML(str) {
