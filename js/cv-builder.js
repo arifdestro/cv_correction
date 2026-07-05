@@ -318,7 +318,29 @@ window.CVBuilder = class CVBuilder {
     const sections = this.collectData();
     const html = this.generateHTML(sections);
 
-    // Open in new tab for print/save
+    if (typeof html2pdf !== 'undefined') {
+      if (window.app) window.app.showToast('Generating PDF...', '⏳');
+      const opt = {
+        margin:       [0.6, 0.6, 0.6, 0.6],
+        filename:     'Improved-CV.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(html).save().then(() => {
+        if (window.app) window.app.showToast('PDF downloaded successfully!', '✅');
+      }).catch(err => {
+        console.error('PDF generation failed:', err);
+        this._fallbackDownload(html);
+      });
+    } else {
+      this._fallbackDownload(html);
+    }
+  }
+
+  _fallbackDownload(html) {
+    // Open in new tab for print/save as fallback
     const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const win = window.open(url, '_blank');
