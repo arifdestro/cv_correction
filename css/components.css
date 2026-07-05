@@ -459,18 +459,24 @@
   flex-shrink: 0;
 }
 
-.category-info {
+.category-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
   min-width: 0;
+}
+
+.category-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .category-name {
   font-weight: 600;
   font-size: var(--text-sm);
   color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.3;
 }
 
 .category-detail {
@@ -478,17 +484,21 @@
   color: var(--text-tertiary);
 }
 
+.category-progress-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .category-score {
   font-weight: 700;
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  min-width: 3rem;
-  text-align: right;
+  min-width: 2.5rem;
 }
 
 .category-bar {
-  width: 100px;
-  flex-shrink: 1;
+  flex: 1;
 }
 
 /* --- Recommendation Cards --- */

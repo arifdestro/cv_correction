@@ -194,17 +194,21 @@ window.Dashboard = class Dashboard {
         <div class="category-icon" style="background: var(--surface-2);">
           ${icon}
         </div>
-        <div class="category-info">
-          <div class="category-name">${cat.name}</div>
-          <div class="category-detail">${cat.score}/${cat.maxScore} pts</div>
-        </div>
-        <div class="category-score" style="color: var(${this._getScoreColorVar(pct)});">
-          ${Math.round(pct)}%
-        </div>
-        <div class="category-bar">
-          <div class="progress-bar">
-            <div class="progress-bar-fill ${colorClass}"
-                 style="width: 0%; transition-delay: ${index * 0.1}s;"></div>
+        <div class="category-content">
+          <div class="category-info">
+            <div class="category-name">${cat.name}</div>
+            <div class="category-detail">${cat.score}/${cat.maxScore} pts</div>
+          </div>
+          <div class="category-progress-container">
+            <div class="category-score" style="color: var(${this._getScoreColorVar(pct)});">
+              ${Math.round(pct)}%
+            </div>
+            <div class="category-bar">
+              <div class="progress-bar">
+                <div class="progress-bar-fill ${colorClass}"
+                     style="width: 0%; transition-delay: ${index * 0.1}s;"></div>
+              </div>
+            </div>
           </div>
         </div>
       `;
