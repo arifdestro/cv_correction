@@ -304,23 +304,65 @@ window.CVBuilder = class CVBuilder {
   downloadPDF() {
     const sections = this.collectData();
     const htmlFragment = this.generateHTML(sections);
-    
-    const printArea = document.getElementById('print-area');
-    if (!printArea) {
-      if (window.app) window.app.showToast('Print area not found.', '⚠️');
-      return;
+
+    // Build a full standalone HTML page for the PDF
+    const fullHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CV - Resume</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      color: #2d2d3a;
+      background: #fff;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 50px;
+      line-height: 1.5;
+    }
+    h1 { font-size: 24pt; font-weight: 800; color: #1a1a2e; margin-bottom: 4px; }
+    h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; color: #6c63ff; border-bottom: 2px solid #6c63ff; padding-bottom: 4px; margin-bottom: 8px; margin-top: 16px; }
+    .contact-bar { font-size: 10pt; color: #555; margin-bottom: 20px; }
+    .contact-bar a { color: #6c63ff; text-decoration: none; }
+    ul { list-style-type: disc; margin: 4px 0 8px 18px; padding: 0; }
+    li { margin-bottom: 3px; }
+    p { margin: 2px 0; }
+    @media print {
+      body { padding: 0; max-width: 100%; }
+      @page { margin: 0.6in; size: A4; }
+    }
+  </style>
+</head>
+<body>
+  ${htmlFragment}
+</body>
+</html>`;
+
+    // Open in a new tab as a real HTML page
+    const blob = new Blob([fullHTML], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, '_blank');
+
+    if (win) {
+      win.addEventListener('load', () => {
+        setTimeout(() => win.print(), 500);
+      });
+      if (window.app) window.app.showToast('CV opened — choose "Save as PDF" in the print dialog', '📄');
+    } else {
+      // Popup blocked — download HTML file instead
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Improved-CV.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      if (window.app) window.app.showToast('Open the downloaded HTML file in browser, then Print → Save as PDF', '📄');
     }
 
-    if (window.app) window.app.showToast('Opening print dialog. Save as PDF!', '📄');
-    
-    printArea.innerHTML = htmlFragment;
-    
-    setTimeout(() => {
-      window.print();
-      setTimeout(() => {
-        printArea.innerHTML = '';
-      }, 1000);
-    }, 300);
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
   }
 
   // ── Download Word ─────────────────────────────
@@ -369,7 +411,6 @@ window.CVBuilder = class CVBuilder {
       font-size: 12pt;
       font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
       color: #6c63ff;
       border-bottom: 2px solid #6c63ff;
       padding-bottom: 4px;
