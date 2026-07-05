@@ -123,9 +123,12 @@
             <h2 class="section-title">Assessment Results</h2>
             <p class="section-subtitle">Detailed breakdown of your CV evaluation</p>
           </div>
-          <div style="display: flex; gap: var(--space-3);">
+          <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
             <button class="btn btn-secondary btn-sm" id="btn-new-analysis">
               📤 New Analysis
+            </button>
+            <button class="btn btn-accent btn-sm" id="btn-build-cv">
+              ✨ Build Improved CV
             </button>
             <button class="btn btn-primary btn-sm" id="btn-export">
               📑 Export Report
@@ -203,6 +206,27 @@
       </section>
 
     </main>
+
+    <!-- ===== CV Builder Section ===== -->
+    <section class="builder-container" id="section-builder">
+      <div class="builder-header">
+        <div>
+          <h2 class="section-title">✨ CV Builder</h2>
+          <p class="section-subtitle">Edit each section below. Auto-corrections have been applied based on your assessment.</p>
+        </div>
+        <div style="display: flex; gap: var(--space-3);">
+          <button class="btn btn-secondary btn-sm" id="btn-builder-back">
+            ← Back to Results
+          </button>
+          <button class="btn btn-primary btn-sm" id="btn-builder-download">
+            📥 Download as PDF
+          </button>
+        </div>
+      </div>
+      <div class="builder-editor" id="builder-editor">
+        <!-- Populated by JS -->
+      </div>
+    </section>
 
     <!-- ===== Settings Panel ===== -->
     <div class="settings-overlay" id="settings-overlay"></div>
@@ -290,6 +314,7 @@
   <script src="js/recommendations.js"></script>
   <script src="js/settings.js"></script>
   <script src="js/export.js"></script>
+  <script src="js/cv-builder.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

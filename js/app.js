@@ -12,8 +12,10 @@ window.App = class App {
     this.recommendations = new window.RecommendationsEngine();
     this.settings = new window.SettingsManager();
     this.exportManager = new window.ExportManager();
+    this.cvBuilder = new window.CVBuilder();
 
     this.currentResults = null;
+    this.currentCvData = null;
     this.currentFile = null;
 
     this.bindEvents();
@@ -155,6 +157,7 @@ window.App = class App {
       const results = this.engine.analyze(cvData, settings);
       results.cvData = cvData;  // attach cvData for recommendations engine
       this.currentResults = results;
+      this.currentCvData = cvData;  // store for CV builder
 
       await this._updateStep('step-ats', 'done');
 

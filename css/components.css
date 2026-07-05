@@ -853,3 +853,138 @@
   color: var(--text-primary);
   font-weight: 500;
 }
+
+/* ============================================
+   CV Builder Styles
+   ============================================ */
+
+/* Accent button variant */
+.btn-accent {
+  background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+  color: #fff;
+  border: none;
+  font-weight: 600;
+}
+
+.btn-accent:hover {
+  background: linear-gradient(135deg, var(--primary-400), var(--accent-400));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+}
+
+/* Builder container */
+.builder-container {
+  display: none;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+.builder-container.active {
+  display: block;
+}
+
+/* Builder header */
+.builder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+}
+
+/* Builder editor */
+.builder-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Builder section card */
+.builder-section {
+  background: var(--surface-1);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5) var(--space-6);
+  transition: all var(--transition-fast);
+}
+
+.builder-section:hover {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 1px var(--primary-500), 0 4px 20px rgba(99, 102, 241, 0.1);
+}
+
+/* Section header */
+.builder-section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.builder-section-icon {
+  font-size: 1.3rem;
+}
+
+.builder-section-label {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Badges */
+.builder-badge {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.builder-badge-missing {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger-400);
+}
+
+.builder-badge-fixed {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent-400);
+}
+
+/* Hint text */
+.builder-hint {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-3);
+  line-height: 1.5;
+}
+
+/* Textarea */
+.builder-textarea {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  line-height: 1.7;
+  resize: vertical;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.builder-textarea::placeholder {
+  color: var(--text-tertiary);
+  opacity: 0.5;
+  font-style: italic;
+}
+
+.builder-textarea:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  background: var(--surface-3);
+}
