@@ -214,8 +214,13 @@ window.CVBuilder = class CVBuilder {
             theme: 'snow',
             modules: {
               toolbar: [
-                ['bold', 'italic', 'underline'],
-                [{ 'list': 'bullet' }]
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'align': [] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link'],
+                ['clean']
               ]
             },
             placeholder: def.placeholder.split('\n')[0] + '...'
@@ -285,8 +290,9 @@ window.CVBuilder = class CVBuilder {
     #print-area h1 { font-size: 24pt; font-weight: 800; color: #1a1a2e; margin-bottom: 4px; }
     #print-area .contact-bar { font-size: 10pt; color: #555; margin-bottom: 20px; word-break: break-all; }
     #print-area .contact-bar a { color: #6c63ff; text-decoration: none; }
-    #print-area ul { list-style-type: disc; }
+    #print-area ul { list-style-type: disc; margin: 4px 0 8px 18px; padding: 0; }
     #print-area li { margin-bottom: 3px; }
+    #print-area .section-content a { color: #6c63ff; text-decoration: none; border-bottom: 1px dotted #6c63ff; }
   </style>
 
   <header>
@@ -337,6 +343,7 @@ window.CVBuilder = class CVBuilder {
     ul { list-style-type: disc; margin: 4px 0 8px 18px; padding: 0; }
     li { margin-bottom: 3px; }
     p { margin: 2px 0; }
+    .section-content a { color: #6c63ff; text-decoration: none; border-bottom: 1px dotted #6c63ff; }
     @media print {
       body { padding: 0; max-width: 100%; }
       @page { margin: 0.6in; size: A4; }
@@ -433,6 +440,10 @@ window.CVBuilder = class CVBuilder {
     }
     li {
       margin-bottom: 3px;
+    }
+    a {
+      color: #6c63ff;
+      text-decoration: underline;
     }
     .contact-bar {
       font-size: 10pt;
