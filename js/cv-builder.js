@@ -130,35 +130,35 @@ window.CVBuilder = class CVBuilder {
         key: 'summary',
         label: 'Professional Summary',
         icon: '🎯',
-        placeholder: 'Results-driven software engineer with 5+ years of experience building scalable web applications. Expert in React and Node.js with a proven track record of reducing load times by 40% and increasing user engagement by 25%.',
+        placeholder: 'Results-driven software engineer with 5+ years of experience...',
         hint: '2-4 sentences. Include measurable achievements, years of experience, and key skills. No personal pronouns.'
       },
       {
         key: 'experience',
         label: 'Work Experience',
         icon: '💼',
-        placeholder: 'Senior Software Engineer | PT Technology Indonesia | Jan 2021 – Present\n• Led migration of legacy monolith to microservices architecture, reducing deployment time by 60%\n• Managed a team of 8 developers across 3 projects with 100% on-time delivery\n• Implemented automated CI/CD pipeline using Jenkins and Docker\n\nSoftware Engineer | PT Digital Solutions | Mar 2018 – Dec 2020\n• Developed RESTful APIs serving 50,000+ daily active users\n• Reduced database query times by 45% through query optimization',
+        placeholder: 'Senior Software Engineer | Company | Jan 2021 – Present\n• Achievement 1\n• Achievement 2',
         hint: 'Reverse chronological. Start each bullet with an action verb. Include measurable results (%, $, numbers).'
       },
       {
         key: 'education',
         label: 'Education',
         icon: '🎓',
-        placeholder: 'Bachelor of Computer Science | Universitas Indonesia | 2014 – 2018\nGPA: 3.75/4.00\nRelevant Coursework: Data Structures, Algorithms, Database Systems',
+        placeholder: 'Bachelor of Computer Science | University | 2014 – 2018\nGPA: 3.75/4.00',
         hint: 'Include degree, institution, graduation year. Add GPA if > 3.5 (for fresh graduates).'
       },
       {
         key: 'skills',
         label: 'Skills',
         icon: '⚡',
-        placeholder: 'Programming Languages: Python, JavaScript, TypeScript, Java\nFrameworks: React, Next.js, Express, Django\nDatabases: PostgreSQL, MongoDB, Redis\nTools & Platforms: Docker, AWS, Git, Jenkins, Jira\nMethodologies: Agile/Scrum, CI/CD, TDD',
+        placeholder: 'Programming: Python, JavaScript\nFrameworks: React, Node.js',
         hint: 'Group skills by category. List specific tools and technologies, not vague traits.'
       },
       {
         key: 'other',
         label: 'Additional (Certifications, Awards, Languages)',
         icon: '🏆',
-        placeholder: 'Certifications:\n• AWS Certified Solutions Architect – Associate (2023)\n• Google Cloud Professional Data Engineer (2022)\n\nLanguages:\n• English — Professional Proficiency\n• Indonesian — Native',
+        placeholder: 'Certifications:\n• AWS Certified (2023)',
         hint: 'Include certifications, awards, publications, volunteer work, or language proficiencies.'
       }
     ];
@@ -166,7 +166,10 @@ window.CVBuilder = class CVBuilder {
     let html = '';
 
     sectionDefs.forEach((def, index) => {
-      const content = this.correctedSections[def.key] || '';
+      const content = this.correctedSections[def.key] !== undefined 
+        ? this.correctedSections[def.key] 
+        : (this.cvData.sections?.[def.key] || '');
+      
       const hasContent = content.trim().length > 0;
       const autoFixApplied = content !== (this.cvData.sections?.[def.key] || '');
 
@@ -179,6 +182,10 @@ window.CVBuilder = class CVBuilder {
             ${autoFixApplied && hasContent ? '<span class="builder-badge builder-badge-fixed">Auto-fixed</span>' : ''}
           </div>
           <div class="builder-hint">${def.hint}</div>
+      `;
+
+      if (def.key === 'contact') {
+        html += `
           <textarea
             class="builder-textarea"
             id="builder-field-${def.key}"
@@ -186,21 +193,56 @@ window.CVBuilder = class CVBuilder {
             placeholder="${def.placeholder}"
             rows="${this._getRows(def.key)}"
           >${this._escapeHTML(content)}</textarea>
-        </div>
-      `;
+        </div>`;
+      } else {
+        html += `
+          <div class="builder-quill-container">
+            <div id="builder-field-${def.key}" data-section="${def.key}">${this._textToHTML(content)}</div>
+          </div>
+        </div>`;
+      }
     });
 
     container.innerHTML = html;
+
+    // Initialize Quill Editors
+    this.editors = {};
+    if (typeof Quill !== 'undefined') {
+      sectionDefs.forEach(def => {
+        if (def.key !== 'contact') {
+          this.editors[def.key] = new Quill(`#builder-field-${def.key}`, {
+            theme: 'snow',
+            modules: {
+              toolbar: [
+                ['bold', 'italic', 'underline'],
+                [{ 'list': 'bullet' }]
+              ]
+            },
+            placeholder: def.placeholder.split('\n')[0] + '...'
+          });
+        }
+      });
+    }
   }
 
   // ── Collect Edited Data ───────────────────────
 
   collectData() {
     const data = {};
-    const fields = document.querySelectorAll('.builder-textarea');
-    fields.forEach(field => {
-      data[field.dataset.section] = field.value.trim();
+    
+    // Collect contact textarea
+    const contactField = document.getElementById('builder-field-contact');
+    if (contactField) {
+      data.contact = contactField.value.trim();
+    }
+    
+    // Collect Quill editors
+    Object.keys(this.editors).forEach(key => {
+      const editor = this.editors[key];
+      // Get HTML directly from Quill
+      data[key] = editor.root.innerHTML;
     });
+
     return data;
   }
 
@@ -218,47 +260,12 @@ window.CVBuilder = class CVBuilder {
     const urls = contact.match(/(?:https?:\/\/|www\.)[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}(?:\/[^\s)]*)?/gi) || [];
 
     const sectionHTML = (title, content) => {
-      if (!content || !content.trim()) return '';
-      const lines = content.split('\n');
-      let body = '';
-
-      lines.forEach(line => {
-        const trimmed = line.trim();
-        if (!trimmed) {
-          body += '<div style="height:6px;"></div>';
-          return;
-        }
-
-        // Detect bullet points
-        const bulletMatch = trimmed.match(/^[•●○◦▪▸►\-–—*→➤➜✓✔☑■]\s*(.*)/);
-        if (bulletMatch) {
-          body += `<li>${this._escapeHTML(bulletMatch[1])}</li>`;
-          return;
-        }
-
-        // Detect sub-headers (lines with | or — separators, like "Job Title | Company | Date")
-        if (/[|–—]/.test(trimmed) && trimmed.length < 120) {
-          body += `<p style="font-weight:600; margin:10px 0 2px 0; color:#1a1a2e;">${this._escapeHTML(trimmed)}</p>`;
-          return;
-        }
-
-        // Detect category labels (ending with :)
-        if (trimmed.endsWith(':') && trimmed.length < 60) {
-          body += `<p style="font-weight:600; margin:10px 0 2px 0; color:#1a1a2e;">${this._escapeHTML(trimmed)}</p>`;
-          return;
-        }
-
-        body += `<p style="margin:2px 0;">${this._escapeHTML(trimmed)}</p>`;
-      });
-
-      // Wrap consecutive <li> in <ul>
-      body = body.replace(/(<li>.*?<\/li>(\s*<li>.*?<\/li>)*)/gs, '<ul style="margin:4px 0 8px 18px; padding:0;">$1</ul>');
-
+      if (!content || !content.trim() || content === '<p><br></p>') return '';
       return `
         <div style="margin-bottom:16px;">
-          <h2 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:#6c63ff; border-bottom:2px solid #6c63ff; padding-bottom:4px; margin-bottom:8px;">${title}</h2>
-          <div style="font-size:11pt; line-height:1.55; color:#2d2d3a;">
-            ${body}
+          <h2>${title}</h2>
+          <div class="section-content">
+            ${content}
           </div>
         </div>
       `;
@@ -465,6 +472,43 @@ window.CVBuilder = class CVBuilder {
   }
 
   // ── Helpers ───────────────────────────────────
+
+  _textToHTML(text) {
+    if (!text) return '';
+    const lines = text.split('\n');
+    let html = '';
+    let inList = false;
+
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed) {
+        if (inList) { html += '</ul>'; inList = false; }
+        html += '<p><br></p>';
+        return;
+      }
+
+      // Convert manual bullets to HTML list
+      const bulletMatch = trimmed.match(/^[•●○◦▪▸►\-–—*→➤➜✓✔☑■]\s*(.*)/);
+      if (bulletMatch) {
+        if (!inList) { html += '<ul>'; inList = true; }
+        html += `<li>${this._escapeHTML(bulletMatch[1])}</li>`;
+        return;
+      }
+      
+      if (inList) { html += '</ul>'; inList = false; }
+      
+      // Convert bold headers like "Job | Company"
+      if (/[|–—]/.test(trimmed) && trimmed.length < 120) {
+        html += `<p><strong>${this._escapeHTML(trimmed)}</strong></p>`;
+        return;
+      }
+      
+      html += `<p>${this._escapeHTML(trimmed)}</p>`;
+    });
+
+    if (inList) html += '</ul>';
+    return html;
+  }
 
   _escapeHTML(str) {
     const div = document.createElement('div');
