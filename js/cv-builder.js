@@ -165,8 +165,8 @@ window.CVBuilder = class CVBuilder {
         key: 'skills',
         label: 'Skills',
         icon: '⚡',
-        placeholder: 'JavaScript, Python, React, Node.js, PostgreSQL, Docker, AWS, Git, Agile, CI/CD',
-        hint: 'Enter skills separated by commas. They will be displayed as visual tags/pills in the final CV.'
+        placeholder: 'Programming & Web Development: PHP, HTML, CSS, JavaScript\nDatabase Management: MySQL, Oracle, PostgreSQL\nFramework: Codeigniter, Laravel',
+        hint: 'Group skills by category with bold labels. Use the format "Category: skill1, skill2, skill3".'
       },
       {
         key: 'other',
@@ -227,17 +227,6 @@ window.CVBuilder = class CVBuilder {
             rows="${rows}"
           >${this._escapeHTML(content)}</textarea>
         </div>`;
-      } else if (def.key === 'skills') {
-        html += `
-          <textarea
-            class="builder-textarea"
-            id="builder-field-${def.key}"
-            data-section="${def.key}"
-            placeholder="${def.placeholder}"
-            rows="4"
-          >${this._escapeHTML(content)}</textarea>
-          <div class="skills-preview" id="skills-preview"></div>
-        </div>`;
       } else {
         html += `
           <div class="builder-quill-container">
@@ -251,7 +240,7 @@ window.CVBuilder = class CVBuilder {
 
     // Initialize Quill Editors
     this.editors = {};
-    const quillSections = ['summary', 'experience', 'education', 'other'];
+    const quillSections = ['summary', 'experience', 'education', 'skills', 'other'];
     if (typeof Quill !== 'undefined') {
       sectionDefs.forEach(def => {
         if (quillSections.includes(def.key)) {
@@ -276,9 +265,6 @@ window.CVBuilder = class CVBuilder {
 
     // Bind photo events
     this._bindPhotoEvents();
-
-    // Bind skills preview
-    this._bindSkillsPreview();
   }
 
   // ── Photo Handling ─────────────────────────────
@@ -334,27 +320,6 @@ window.CVBuilder = class CVBuilder {
     }
   }
 
-  // ── Skills Preview ─────────────────────────────
-
-  _bindSkillsPreview() {
-    const skillsField = document.getElementById('builder-field-skills');
-    const skillsPreview = document.getElementById('skills-preview');
-
-    if (skillsField && skillsPreview) {
-      const updatePreview = () => {
-        const val = skillsField.value.trim();
-        if (!val) {
-          skillsPreview.innerHTML = '<span style="color:var(--text-tertiary); font-size: var(--text-xs);">Skills preview will appear here...</span>';
-          return;
-        }
-        const skills = val.split(/[,;\n]+/).map(s => s.trim()).filter(s => s.length > 0);
-        skillsPreview.innerHTML = skills.map(s => `<span class="skill-pill">${this._escapeHTML(s)}</span>`).join('');
-      };
-
-      skillsField.addEventListener('input', updatePreview);
-      updatePreview();
-    }
-  }
 
   // ── Collect Edited Data ───────────────────────
 
@@ -367,8 +332,7 @@ window.CVBuilder = class CVBuilder {
     const taglineField = document.getElementById('builder-field-tagline');
     if (taglineField) data.tagline = taglineField.value.trim();
 
-    const skillsField = document.getElementById('builder-field-skills');
-    if (skillsField) data.skills = skillsField.value.trim();
+
     
     Object.keys(this.editors).forEach(key => {
       const editor = this.editors[key];
@@ -394,7 +358,7 @@ window.CVBuilder = class CVBuilder {
     const locations = contactLines.filter(l => !emails.some(e => l.includes(e)) && !phones.some(p => l.includes(p)) && !urls.some(u => l.includes(u)) && l !== name);
 
     const photoHTML = sections._photo 
-      ? `<img src="${sections._photo}" alt="Profile Photo" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 3px solid #6c63ff; flex-shrink:0;">`
+      ? `<img src="${sections._photo}" alt="Profile Photo" style="width:110px; height:130px; border-radius:8px; object-fit:cover; border: 2px solid #6c63ff; flex-shrink:0;">`
       : '';
 
     const sectionHTML = (title, content, icon) => {
@@ -409,16 +373,7 @@ window.CVBuilder = class CVBuilder {
       `;
     };
 
-    const skillsRaw = sections.skills || '';
-    const skillsList = skillsRaw.split(/[,;\n]+/).map(s => s.trim()).filter(s => s.length > 0);
-    const skillsHTML = skillsList.length > 0
-      ? `<div class="cv-section">
-          <h2><span class="section-icon">⚡</span> Skills</h2>
-          <div class="skills-container">
-            ${skillsList.map(s => `<span class="skill-tag">${this._escapeHTML(s)}</span>`).join('')}
-          </div>
-        </div>`
-      : '';
+
 
     const contactItems = [];
     if (emails.length) contactItems.push(...emails.map(e => `<span class="contact-item"><span class="ci-icon">✉</span> <a href="mailto:${e}">${e}</a></span>`));
@@ -490,16 +445,6 @@ window.CVBuilder = class CVBuilder {
     .section-content ul { list-style-type: disc; margin: 4px 0 8px 18px; padding: 0; }
     .section-content li { margin-bottom: 3px; }
     .section-content a { color: #6c63ff; text-decoration: none; border-bottom: 1px dotted #6c63ff; }
-    .skills-container { display: flex; flex-wrap: wrap; gap: 6px; }
-    .skill-tag {
-      background: #f0eeff;
-      color: #4a42d0;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 9pt;
-      font-weight: 600;
-      border: 1px solid #ddd8ff;
-    }
   </style>
 
   <div class="cv-page">
@@ -517,7 +462,7 @@ window.CVBuilder = class CVBuilder {
     ${sectionHTML('Professional Summary', sections.summary, '🎯')}
     ${sectionHTML('Professional Experience', sections.experience, '💼')}
     ${sectionHTML('Education', sections.education, '🎓')}
-    ${skillsHTML}
+    ${sectionHTML('Skills', sections.skills, '⚡')}
     ${sectionHTML('Additional', sections.other, '🏆')}
   </div>`;
   }
@@ -631,18 +576,6 @@ window.CVBuilder = class CVBuilder {
     .contact-bar { font-size: 10pt; color: #555; margin-bottom: 16px; }
     .contact-bar a { color: #6c63ff; text-decoration: none; }
     .tagline { font-size: 12pt; font-weight: bold; color: #6c63ff; margin-bottom: 8px; }
-    .skill-tag {
-      display: inline-block;
-      background: #f0eeff;
-      color: #4a42d0;
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-size: 9pt;
-      font-weight: bold;
-      margin: 2px 3px 2px 0;
-      border: 1px solid #ddd8ff;
-    }
-    .skills-container { margin-top: 4px; }
     table { border-collapse: collapse; }
   </style>
 </head>
