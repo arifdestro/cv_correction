@@ -571,6 +571,7 @@
             }
 
             // Count bullet-like lines
+            const lines = expText.split(/\n/);
             const bulletLines = lines.filter(function (l) {
                 const t = l.trim();
                 const isSymbolBullet = /^[-–—•●◦▪►▸→➤>*·✓✔❖➢]\s?/.test(t);
