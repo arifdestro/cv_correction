@@ -129,13 +129,14 @@
             }
 
             const degreePatterns = [
-                /\b(?:B\.?A\.?|B\.?S\.?|B\.?Sc\.?|B\.?Eng\.?|B\.?Tech\.?|Bachelor(?:'s)?)\b/i,
-                /\b(?:M\.?A\.?|M\.?S\.?|M\.?Sc\.?|M\.?Eng\.?|M\.?Tech\.?|M\.?B\.?A\.?|Master(?:'s)?)\b/i,
-                /\b(?:Ph\.?D\.?|Doctorate|Doctor(?:al)?)\b/i,
-                /\b(?:Associate(?:'s)?|A\.?A\.?|A\.?S\.?)\b/i,
-                /\b(?:Diploma|Certificate|Certification)\b/i,
+                /\b(?:B\.?A\.?|B\.?S\.?|B\.?Sc\.?|B\.?Eng\.?|B\.?Tech\.?|Bachelor(?:'s)?|Sarjana|S1|S-1)\b/i,
+                /\b(?:M\.?A\.?|M\.?S\.?|M\.?Sc\.?|M\.?Eng\.?|M\.?Tech\.?|M\.?B\.?A\.?|Master(?:'s)?|Magister|S2|S-2)\b/i,
+                /\b(?:Ph\.?D\.?|Doctorate|Doctor(?:al)?|Doktor|S3|S-3)\b/i,
+                /\b(?:Associate(?:'s)?|A\.?A\.?|A\.?S\.?|Diploma|D1|D2|D3|D4|D-1|D-2|D-3|D-4)\b/i,
+                /\b(?:Certificate|Certification|Sertifikasi)\b/i,
                 /\b(?:B\.?Com\.?|LL\.?B\.?|LL\.?M\.?|M\.?D\.?|J\.?D\.?|D\.?D\.?S\.?)\b/i,
-                /\b(?:Bachelor|Master|Degree)\s+(?:of|in)\s+\w+/i,
+                /\b(?:SMA|SMK|MA|Sekolah Menengah)\b/i,
+                /\b(?:Bachelor|Master|Degree|Gelar)\s+(?:of|in)\s+\w+/i,
                 /\b(?:Honours?|Honors?|Hons?\.?)\b/i
             ];
 
@@ -167,7 +168,7 @@
             }
 
             // Check for field of study without explicit degree
-            const fieldOfStudy = /\b(?:Computer Science|Engineering|Business|Marketing|Finance|Accounting|Economics|Psychology|Biology|Chemistry|Physics|Mathematics|Law|Medicine|Nursing|Design|Architecture|Communications?)\b/i.test(eduText);
+            const fieldOfStudy = /\b(?:Computer Science|Engineering|Business|Marketing|Finance|Accounting|Economics|Psychology|Biology|Chemistry|Physics|Mathematics|Law|Medicine|Nursing|Design|Architecture|Communications?|Informatika|Sistem Informasi|Teknik|Bisnis|Manajemen|Keuangan|Akuntansi|Ekonomi|Hukum|Kedokteran|Psikologi|Ilmu Komunikasi|Jurusan|Program Studi|Prodi)\b/i.test(eduText);
 
             if (fieldOfStudy) {
                 return {
@@ -203,7 +204,7 @@
 
             // Look for university/college/institute patterns
             const institutionPatterns = [
-                /\b(?:University|College|Institute|School|Academy|Polytechnic|Universit[éa])\b/i,
+                /\b(?:University|College|Institute|School|Academy|Polytechnic|Universit[éa]|Universitas|Institut|Politeknik|Sekolah Tinggi|Akademi|SMA|SMK|Madrasah|MAN|MTS|SMP)\b/i,
                 /\bU(?:niv)?\.?\s+of\s+\w+/i,
                 /\b[A-Z][a-z]+\s+(?:State|Tech|Technical)\b/,
                 /\b(?:MIT|UCLA|NYU|USC|UCSB|UCSD|UCB|CMU|GaTech|CalTech|ETH|NUS|NTU|IIT|BITS)\b/,
