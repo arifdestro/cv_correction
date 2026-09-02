@@ -333,7 +333,11 @@
             // Count bullet-style lines
             const bulletLines = lines.filter(function (line) {
                 const trimmed = line.trim();
-                return /^[-–—•●◦▪►▸→➤>*]\s/.test(trimmed) || /^\d+[.)]\s/.test(trimmed);
+                // Match common bullet symbols, Wingdings mappings, and middle dots, optionally followed by space
+                const isSymbolBullet = /^[-–—•●◦▪►▸→➤>*·✓✔❖➢]\s?/.test(trimmed);
+                // Match number bullets e.g. 1. or 1) followed by space
+                const isNumberBullet = /^\d+[.)]\s/.test(trimmed);
+                return isSymbolBullet || isNumberBullet;
             });
 
             const bulletRatio = bulletLines.length / Math.max(lines.length, 1);
