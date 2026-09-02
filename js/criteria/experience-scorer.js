@@ -153,16 +153,17 @@
                 };
             }
 
-            // Check if dates are in reverse chronological order (most recent first)
-            let isReverseChronological = true;
-            let isChronological = true;
-            for (var i = 1; i < years.length; i++) {
-                if (years[i] > years[i - 1]) isReverseChronological = false;
-                if (years[i] < years[i - 1]) isChronological = false;
-            }
+            // Compare the first year found with the last year found to determine overall direction
+            // Since a single role might be "2018 - 2020" (which is chronological internally), 
+            // checking every single year strictly will fail.
+            const firstYear = years[0];
+            const lastYear = years[years.length - 1];
+            
+            const isReverseChronological = firstYear >= lastYear;
+            const isChronological = firstYear < lastYear;
 
             // Check for "Present" or "Current" at the beginning
-            const hasPresent = /\b(?:present|current|now|ongoing)\b/i.test(expText.substring(0, Math.min(expText.length, 500)));
+            const hasPresent = /\b(?:present|current|now|ongoing|sekarang|saat ini)\b/i.test(expText.substring(0, Math.min(expText.length, 500)));
 
             if (isReverseChronological || (hasPresent && years.length >= 2)) {
                 return {
@@ -226,8 +227,8 @@
                 if (trimmed.length > 15) {
                     totalBulletLines++;
 
-                    // Get first few words
-                    const words = trimmed.replace(/^[-–—•●◦▪►▸→➤>*]\s*/, '').split(/\s+/);
+                    // Get first few words, stripping bullets first
+                    const words = trimmed.replace(/^[-–—•●◦▪►▸→➤>*·✓✔❖➢]\s?/, '').split(/\s+/);
                     const firstWord = (words[0] || '').toLowerCase().replace(/[^a-z]/g, '');
                     const firstTwoWords = words.slice(0, 2).join(' ').toLowerCase();
                     const firstThreeWords = words.slice(0, 3).join(' ').toLowerCase();
@@ -271,10 +272,10 @@
                 explanation = 'Moderate action verb usage (' + actionVerbCount + '/' + totalBulletLines + ' lines). ' + (weakVerbCount > 0 ? 'Found weak verbs: "' + foundWeakVerbs.join('", "') + '". Replace these with impactful action verbs.' : 'Start each bullet point with a strong action verb.');
             } else if (actionVerbCount > 0) {
                 points = 1;
-                explanation = 'Weak action verb usage—only ' + actionVerbCount + '/' + totalBulletLines + ' lines use strong verbs. ' + (weakVerbCount > 0 ? 'Detected ' + weakVerbCount + ' weak verb(s): "' + foundWeakVerbs.join('", "') + '".' : '') + ' Every bullet should begin with a powerful action verb (e.g., "Spearheaded", "Engineered", "Orchestrated").';
+                explanation = 'Weak action verb usage—only ' + actionVerbCount + '/' + totalBulletLines + ' lines use strong verbs. ' + (weakVerbCount > 0 ? 'Detected ' + weakVerbCount + ' weak verb(s): "' + foundWeakVerbs.join('", "') + '".' : '') + ' Every bullet should begin with a powerful action verb (e.g., "Spearheaded", "Engineered" / "Mempelopori", "Memimpin").';
             } else {
                 points = 0;
-                explanation = 'No strong action verbs detected in experience bullets. ' + (weakVerbCount > 0 ? 'Found ' + weakVerbCount + ' weak verb(s): "' + foundWeakVerbs.join('", "') + '". ' : '') + 'Start each bullet with powerful verbs like "Spearheaded", "Engineered", "Delivered", "Optimized".';
+                explanation = 'No strong action verbs detected in experience bullets. ' + (weakVerbCount > 0 ? 'Found ' + weakVerbCount + ' weak verb(s): "' + foundWeakVerbs.join('", "') + '". ' : '') + 'Start each bullet with powerful verbs like "Spearheaded", "Delivered" / "Menginisiasi", "Memimpin", "Mengembangkan".';
             }
 
             return {
@@ -570,10 +571,11 @@
             }
 
             // Count bullet-like lines
-            const lines = expText.split(/\n/);
             const bulletLines = lines.filter(function (l) {
                 const t = l.trim();
-                return /^[-–—•●◦▪►▸→➤>*]\s/.test(t) || /^\d+[.)]\s/.test(t);
+                const isSymbolBullet = /^[-–—•●◦▪►▸→➤>*·✓✔❖➢]\s?/.test(t);
+                const isNumberBullet = /^\d+[.)]\s/.test(t);
+                return isSymbolBullet || isNumberBullet;
             });
 
             // Estimate number of roles (look for year patterns or title patterns as role separators)
