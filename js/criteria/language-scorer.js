@@ -11,6 +11,7 @@ window.LanguageScorer = class LanguageScorer {
   score(cvData, options = {}) {
     const details = [];
     const fullText = (cvData.rawText || '').toLowerCase();
+    const region = options.region || 'US';
     
     // 1. Common spelling errors (3 pts)
     const commonErrors = window.COMMON_SPELLING_ERRORS || {};
@@ -58,7 +59,10 @@ window.LanguageScorer = class LanguageScorer {
     
     // 3. No personal pronouns (2 pts)
     // Looking for I, me, my, mine, we, our, us, saya, aku, kami, kita
-    const pronounRegex = /\b(i|me|my|mine|we|our|us|saya|aku|kami|kita)\b/gi;
+    const isIndonesian = region === 'ID';
+    const pronounRegex = isIndonesian 
+      ? /\b(saya|aku|kami|kita)\b/gi 
+      : /\b(i|me|my|mine|we|our|us|saya|aku|kami|kita)\b/gi;
     const pronounMatches = fullText.match(pronounRegex) || [];
     
     let pronounPoints = 2;
@@ -72,7 +76,7 @@ window.LanguageScorer = class LanguageScorer {
       maxPoints: 2,
       explanation: pronounPoints === 2
         ? 'Good use of implied first-person without personal pronouns.'
-        : `Found ${pronounMatches.length} personal pronoun(s) ("I", "my", "we", "saya", "aku", etc.). CVs should be written without personal pronouns (e.g., instead of "I managed a team", use "Managed a team").`
+        : `Found ${pronounMatches.length} personal pronoun(s): "${Array.from(new Set(pronounMatches.map(m => m.toLowerCase()))).join('", "')}". CVs should be written without personal pronouns (e.g., instead of "Saya memimpin", use "Memimpin").`
     });
     
     // 4. No filler words (1 pt)
@@ -93,15 +97,12 @@ window.LanguageScorer = class LanguageScorer {
         : `Found filler words: "${foundFillers.slice(0, 3).join('", "')}". Remove these to make your writing more impactful and direct.`
     });
     
-    const region = options.region || 'US';
-    
     // Very basic heuristic: check if mixing 'ing' and 'ed' endings heavily (only relevant for English)
     const ingWords = (fullText.match(/\b\w+ing\b/g) || []).length;
     const edWords = (fullText.match(/\b\w+ed\b/g) || []).length;
     
     // Ideally we want more 'ed' action words for past experience
     // For ID region, many words end in "ing" (penting, masing, sering) but not "ed", which throws off the logic
-    const isIndonesian = region === 'ID';
     const tenseConsistency = isIndonesian || (edWords > ingWords * 0.5) || (edWords === 0 && ingWords === 0);
     
     details.push({
