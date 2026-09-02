@@ -315,8 +315,10 @@
             }
 
             // Try to detect a name from the first few lines
-            const firstLines = rawText.split(/\n/).slice(0, 5).join(' ');
-            const possibleName = /^[A-Z][a-z]+\s+[A-Z][a-z]+/.test(firstLines.trim());
+            const firstLines = rawText.split(/\n/).slice(0, 5).join(' ').trim();
+            // Match Title Case or ALL CAPS, at least two words
+            const possibleName = /^(?:[A-Z][a-z]+\s+[A-Z][a-z]+|[A-Z]{2,}\s+[A-Z]{2,})/.test(firstLines) || 
+                                 /\b(?:[A-Z][a-z]+\s+[A-Z][a-z]+|[A-Z]{2,}\s+[A-Z]{2,})\b/.test(rawText.split(/\n/).slice(0, 3).join(' '));
 
             if (possibleName) {
                 return {
