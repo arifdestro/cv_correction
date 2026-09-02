@@ -263,12 +263,15 @@
             const portfolio = (contact.website || contact.portfolio || contact.github || '').trim();
             const textLower = rawText.toLowerCase();
 
+            const urls = cvData.urls || [];
+            const nonLinkedinUrls = urls.filter(function(url) {
+                return url.toLowerCase().indexOf('linkedin.com') === -1;
+            });
+
             const hasPortfolio = portfolio.length > 0 ||
-                /github\.com\/\w+/i.test(rawText) ||
-                /gitlab\.com\/\w+/i.test(rawText) ||
-                /bitbucket\.org\/\w+/i.test(rawText) ||
-                /portfolio/i.test(rawText) ||
-                /(?:https?:\/\/)?(?:www\.)?[\w\-]+\.(?:com|io|dev|me|net|org)(?:\/\S*)?/i.test(rawText) && textLower.indexOf('linkedin.com') === -1;
+                /github\.com|gitlab\.com|bitbucket\.org|behance\.net|dribbble\.com|medium\.com/i.test(rawText) ||
+                /\b(?:portfolio|website|blog|karya)\b/i.test(rawText) ||
+                nonLinkedinUrls.length > 0;
 
             if (!hasPortfolio) {
                 return {
