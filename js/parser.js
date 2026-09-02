@@ -95,8 +95,34 @@ window.FileParser = class FileParser {
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const content = await page.getTextContent();
-      const strings = content.items.map(item => item.str);
-      pages.push(strings.join(' '));
+      
+      // Sort items by Y coordinate (top to bottom) then X coordinate (left to right)
+      // PDF.js Y coordinate originates from bottom, so higher Y means higher on page
+      const items = content.items.sort((a, b) => {
+        const yDiff = b.transform[5] - a.transform[5];
+        // If Y difference is significant (> 5pt), treat as different lines
+        if (Math.abs(yDiff) > 5) return yDiff;
+        // If on same line, sort by X (left to right)
+        return a.transform[4] - b.transform[4];
+      });
+
+      let lastY = -1;
+      let text = '';
+      
+      for (const item of items) {
+        const str = item.str.trim();
+        if (!str) continue; // Skip empty strings
+        
+        if (lastY !== -1 && Math.abs(item.transform[5] - lastY) > 5) {
+          text += '\n'; // Different line
+        } else if (lastY !== -1) {
+          text += ' ';  // Same line, separate by space
+        }
+        text += str;
+        lastY = item.transform[5];
+      }
+      
+      pages.push(text);
     }
 
     return pages.join('\n\n');
