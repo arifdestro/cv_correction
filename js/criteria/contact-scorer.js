@@ -234,8 +234,8 @@
                 let explanation = 'No location detected. ';
                 if (region === 'US') {
                     explanation += 'Include city and state. Full address is not needed in the US.';
-                } else if (region === 'ASIA') {
-                    explanation += 'Include full location. Some Asian employers expect detailed address information.';
+                } else if (region === 'ASIA' || region === 'ID') {
+                    explanation += 'Include full location. Some Asian/Indonesian employers expect detailed address information.';
                 } else {
                     explanation += 'Include at least your city and country for recruiter context.';
                 }

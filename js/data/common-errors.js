@@ -138,7 +138,9 @@
         'extremely', 'incredibly', 'remarkably', 'absolutely',
         'obviously', 'clearly', 'certainly', 'definitely',
         'perhaps', 'maybe', 'possibly', 'probably',
-        'approximately', 'roughly', 'about', 'around',
+        // Indonesian fillers
+        'sangat', 'sekali', 'benar-benar', 'pada dasarnya',
+        'cukup', 'lumayan', 'sepertinya', 'mungkin',
         'also', 'furthermore', 'moreover', 'additionally',
         'honestly', 'frankly', 'in fact', 'as a matter of fact',
         'needless to say', 'it goes without saying'
@@ -155,7 +157,11 @@
         'proactive', 'strategic', 'passionate', 'driven',
         'value-added', 'value-add', 'stakeholder', 'ecosystem',
         'bandwidth', 'touch base', 'low-hanging fruit', 'drill down',
-        'boil the ocean', 'blue-sky thinking', 'growth hacking'
+        'boil the ocean', 'blue-sky thinking', 'growth hacking',
+        // Indonesian buzzwords
+        'pekerja keras', 'cepat belajar', 'pemain tim',
+        'berorientasi pada detail', 'berorientasi pada hasil',
+        'siap bekerja di bawah tekanan', 'bertanggung jawab'
     ];
 
     // Build lookup sets for fast detection

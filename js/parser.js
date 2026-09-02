@@ -18,19 +18,19 @@ window.FileParser = class FileParser {
 
     // Section header patterns grouped by semantic meaning
     this.sectionPatterns = {
-      contact: /^(contact\s*(info(rmation)?)?|personal\s*(info(rmation)?|details)?|address)/i,
-      summary: /^(summary|professional\s*summary|executive\s*summary|objective|career\s*objective|profile|about(\s*me)?|personal\s*statement|overview)/i,
-      experience: /^(experience|work\s*(experience|history)|professional\s*experience|employment(\s*history)?|career\s*history|relevant\s*experience|positions?\s*held)/i,
-      education: /^(education|academic(\s*background|s)?|qualifications?|degrees?|training|academic\s*credentials)/i,
-      skills: /^(skills?|technical\s*skills?|core\s*competenc(ies|y)|key\s*skills?|areas?\s*of\s*expertise|proficienc(ies|y)|technologies|tools?(\s*&\s*technologies)?|competenc(ies|y))/i,
-      projects: /^(projects?|key\s*projects?|notable\s*projects?|portfolio)/i,
-      certifications: /^(certifications?|licenses?(\s*&\s*certifications?)?|professional\s*certifications?|accreditations?|credentials?)/i,
-      awards: /^(awards?(\s*&\s*honors?)?|honors?(\s*&\s*awards?)?|achievements?|recognitions?|accomplishments?)/i,
-      publications: /^(publications?|research(\s*papers?)?|papers?|presentations?|conference\s*papers?)/i,
-      languages: /^(languages?|language\s*skills?|language\s*proficienc(ies|y))/i,
-      interests: /^(interests?|hobbies(\s*&\s*interests?)?|activities|extracurricular(\s*activities)?|personal\s*interests?)/i,
-      volunteer: /^(volunteer(ing)?(\s*(experience|work))?|community\s*(service|involvement)|civic\s*activities)/i,
-      references: /^(references?|referees?|recommendations?)/i
+      contact: /^(contact\s*(info(rmation)?)?|personal\s*(info(rmation)?|details)?|address|kontak|informasi\s*pribadi|data\s*diri)/i,
+      summary: /^(summary|professional\s*summary|executive\s*summary|objective|career\s*objective|profile|about(\s*me)?|personal\s*statement|overview|ringkasan|profil|tentang\s*saya)/i,
+      experience: /^(experience|work\s*(experience|history)|professional\s*experience|employment(\s*history)?|career\s*history|relevant\s*experience|positions?\s*held|pengalaman(\s*kerja)?|riwayat\s*pekerjaan)/i,
+      education: /^(education|academic(\s*background|s)?|qualifications?|degrees?|training|academic\s*credentials|pendidikan|riwayat\s*pendidikan)/i,
+      skills: /^(skills?|technical\s*skills?|core\s*competenc(ies|y)|key\s*skills?|areas?\s*of\s*expertise|proficienc(ies|y)|technologies|tools?(\s*&\s*technologies)?|competenc(ies|y)|keahlian|keterampilan|kemampuan)/i,
+      projects: /^(projects?|key\s*projects?|notable\s*projects?|portfolio|proyek|portofolio)/i,
+      certifications: /^(certifications?|licenses?(\s*&\s*certifications?)?|professional\s*certifications?|accreditations?|credentials?|sertifikasi|lisensi)/i,
+      awards: /^(awards?(\s*&\s*honors?)?|honors?(\s*&\s*awards?)?|achievements?|recognitions?|accomplishments?|penghargaan|prestasi)/i,
+      publications: /^(publications?|research(\s*papers?)?|papers?|presentations?|conference\s*papers?|publikasi)/i,
+      languages: /^(languages?|language\s*skills?|language\s*proficienc(ies|y)|bahasa|kemampuan\s*bahasa)/i,
+      interests: /^(interests?|hobbies(\s*&\s*interests?)?|activities|extracurricular(\s*activities)?|personal\s*interests?|minat|hobi)/i,
+      volunteer: /^(volunteer(ing)?(\s*(experience|work))?|community\s*(service|involvement)|civic\s*activities|sukarelawan|pengalaman\s*organisasi)/i,
+      references: /^(references?|referees?|recommendations?|referensi|rujukan)/i
     };
   }
 

@@ -87,6 +87,18 @@
             'processed', 'recorded', 'reorganized', 'scheduled', 'simplified',
             'sorted', 'structured', 'systematized', 'unified', 'updated',
             'coordinated', 'dispatched', 'routed', 'tabulated', 'verified'
+        ],
+        indonesian: [
+            'memimpin', 'mengarahkan', 'mengelola', 'mempelopori', 'mendirikan',
+            'mengkoordinasikan', 'meningkatkan', 'mencapai', 'menghasilkan',
+            'merancang', 'membangun', 'mengembangkan', 'menciptakan', 'membuat',
+            'menganalisis', 'mengevaluasi', 'meneliti', 'menemukan', 'menyelesaikan',
+            'menulis', 'mempresentasikan', 'merumuskan', 'menyusun', 'mengoptimalkan',
+            'memaksimalkan', 'meminimalkan', 'mempercepat', 'merestrukturisasi',
+            'menegosiasikan', 'merencanakan', 'mengimplementasikan', 'melaksanakan',
+            'mengawasi', 'memfasilitasi', 'menginisiasi', 'mendorong', 'mendukung',
+            'melatih', 'membimbing', 'menginspirasi', 'menyederhanakan', 'memperbarui',
+            'menyelaraskan', 'mengamankan', 'mempertahankan', 'meningkatkan'
         ]
     };
 
@@ -108,7 +120,11 @@
         'knew', 'felt', 'thought', 'said', 'told',
         'showed', 'gave', 'kept', 'began', 'started',
         'performed duties', 'tasked with', 'duties included',
-        'contributed to', 'played a role in', 'was exposed to'
+        'contributed to', 'played a role in', 'was exposed to',
+        // Indonesian weak verbs
+        'membantu', 'ikut', 'ikut serta', 'berpartisipasi dalam', 'tugasnya meliputi',
+        'bertanggung jawab atas', 'ditugaskan untuk', 'bekerja', 'melakukan', 'membuat',
+        'terlibat dalam', 'menggunakan', 'memakai', 'menangani', 'dipercaya untuk'
     ];
 
     window.WEAK_VERBS_SET = new Set(window.WEAK_VERBS.map(function (v) { return v.toLowerCase(); }));

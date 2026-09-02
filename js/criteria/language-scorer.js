@@ -57,8 +57,8 @@ window.LanguageScorer = class LanguageScorer {
     });
     
     // 3. No personal pronouns (2 pts)
-    // Looking for I, me, my, mine, we, our, us
-    const pronounRegex = /\b(i|me|my|mine|we|our|us)\b/gi;
+    // Looking for I, me, my, mine, we, our, us, saya, aku, kami, kita
+    const pronounRegex = /\b(i|me|my|mine|we|our|us|saya|aku|kami|kita)\b/gi;
     const pronounMatches = fullText.match(pronounRegex) || [];
     
     let pronounPoints = 2;
@@ -72,7 +72,7 @@ window.LanguageScorer = class LanguageScorer {
       maxPoints: 2,
       explanation: pronounPoints === 2
         ? 'Good use of implied first-person without personal pronouns.'
-        : `Found ${pronounMatches.length} personal pronoun(s) ("I", "my", "we", etc.). CVs should be written without personal pronouns (e.g., instead of "I managed a team", use "Managed a team").`
+        : `Found ${pronounMatches.length} personal pronoun(s) ("I", "my", "we", "saya", "aku", etc.). CVs should be written without personal pronouns (e.g., instead of "I managed a team", use "Managed a team").`
     });
     
     // 4. No filler words (1 pt)
@@ -113,7 +113,7 @@ window.LanguageScorer = class LanguageScorer {
     
     // 6. Sentence structure variety / active voice (1 pt)
     // Check if sentences start with "Responsible for" or "Duties included"
-    const passiveStartsRegex = /\b(responsible for|duties included|tasked with)\b/gi;
+    const passiveStartsRegex = /\b(responsible for|duties included|tasked with|bertanggung jawab atas|tugasnya meliputi|ditugaskan untuk)\b/gi;
     const passiveStartsMatches = fullText.match(passiveStartsRegex) || [];
     
     const isActiveVoice = passiveStartsMatches.length === 0;

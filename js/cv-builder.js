@@ -85,6 +85,11 @@ window.CVBuilder = class CVBuilder {
         const bullet = match.match(/^[\s•\-–—*►▪]*/)?.[0] || '';
         return bullet;
       });
+      // Remove Indonesian pronouns "Saya" or "Aku" at start
+      fixed = fixed.replace(/^[\s•\-–—*►▪]*\b(Saya|Aku|Kami)\s+(telah\s+|pernah\s+|sedang\s+|adalah\s+)?/gim, (match) => {
+        const bullet = match.match(/^[\s•\-–—*►▪]*/)?.[0] || '';
+        return bullet;
+      });
 
       // Clean up "my " at start of lines
       fixed = fixed.replace(/^([\s•\-–—*►▪]*)\bMy\s+/gim, '$1');
