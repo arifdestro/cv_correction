@@ -40,7 +40,7 @@
             details.push(this._assessLocation(contact, rawText, region));
 
             // 5. Portfolio/Website (1 pt)
-            details.push(this._assessPortfolio(contact, rawText));
+            details.push(this._assessPortfolio(contact, rawText, cvData));
 
             // 6. Name Detection (1 pt)
             details.push(this._assessName(contact, cvData));
@@ -258,7 +258,7 @@
             };
         }
 
-        _assessPortfolio(contact, rawText) {
+        _assessPortfolio(contact, rawText, cvData) {
             const maxPoints = 1;
             const portfolio = (contact.website || contact.portfolio || contact.github || '').trim();
             const textLower = rawText.toLowerCase();
