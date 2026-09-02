@@ -93,13 +93,16 @@ window.LanguageScorer = class LanguageScorer {
         : `Found filler words: "${foundFillers.slice(0, 3).join('", "')}". Remove these to make your writing more impactful and direct.`
     });
     
-    // 5. Consistent tense usage (1 pt)
-    // Very basic heuristic: check if mixing 'ing' and 'ed' endings heavily
+    const region = options.region || 'US';
+    
+    // Very basic heuristic: check if mixing 'ing' and 'ed' endings heavily (only relevant for English)
     const ingWords = (fullText.match(/\b\w+ing\b/g) || []).length;
     const edWords = (fullText.match(/\b\w+ed\b/g) || []).length;
     
     // Ideally we want more 'ed' action words for past experience
-    const tenseConsistency = (edWords > ingWords * 0.5) || (edWords === 0 && ingWords === 0);
+    // For ID region, many words end in "ing" (penting, masing, sering) but not "ed", which throws off the logic
+    const isIndonesian = region === 'ID';
+    const tenseConsistency = isIndonesian || (edWords > ingWords * 0.5) || (edWords === 0 && ingWords === 0);
     
     details.push({
       criterion: 'Tense Consistency',
@@ -107,7 +110,7 @@ window.LanguageScorer = class LanguageScorer {
       points: tenseConsistency ? 1 : 0,
       maxPoints: 1,
       explanation: tenseConsistency
-        ? 'Verb tenses appear reasonably consistent.'
+        ? (isIndonesian ? 'Not applicable for Indonesian language (tenses are contextual).' : 'Verb tenses appear reasonably consistent.')
         : 'Possible mixing of present ("-ing") and past ("-ed") tenses detected. Ensure past jobs use past tense, and current jobs use present tense.'
     });
     
