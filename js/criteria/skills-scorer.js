@@ -205,7 +205,7 @@
                 };
             }
 
-            const softSkillPatterns = /\b(?:leadership|communication|collaboration|problem[- ]solving|critical thinking|time management|strategic planning|negotiation|conflict resolution|decision[- ]making|mentoring|coaching|presentation|stakeholder management|cross[- ]functional|team management|adaptability|creativity|analytical|organizational|interpersonal)\b/i;
+            const softSkillPatterns = /\b(?:leadership|communication|collaboration|problem[- ]solving|critical thinking|time management|strategic planning|negotiation|conflict resolution|decision[- ]making|mentoring|coaching|presentation|stakeholder management|cross[- ]functional|team management|adaptability|creativity|analytical|organizational|interpersonal|kepemimpinan|komunikasi|kolaborasi|pemecahan\s*masalah|berpikir\s*kritis|manajemen\s*waktu|perencanaan\s*strategis|negosiasi|penyelesaian\s*konflik|pengambilan\s*keputusan|presentasi|kreativitas|analitis|organisasi|interpersonal|adaptasi|kerja\s*sama)\b/i;
 
             const matches = skillsText.match(new RegExp(softSkillPatterns.source, 'gi')) || [];
 
@@ -439,10 +439,10 @@
             // Look for version numbers, proficiency levels, or specifics
             const specificityIndicators = [
                 /\b(?:v\d+|\d+\.\d+|ES\d+|Python\s*[23]|Java\s*\d+|\.NET\s*\d+|React\s*\d+|Angular\s*\d+|Node\s*\d+)\b/i,
-                /\b(?:advanced|intermediate|beginner|proficient|expert|fluent|native|working knowledge|hands-on)\b/i,
-                /\b(?:\d+\+?\s*years?)\b/i,
+                /\b(?:advanced|intermediate|beginner|proficient|expert|fluent|native|working knowledge|hands-on|mahir|menengah|pemula|berpengalaman|ahli)\b/i,
+                /\b(?:\d+\+?\s*(?:years?|tahun))\b/i,
                 /\b(?:AWS\s+(?:EC2|S3|Lambda|RDS|CloudFormation|ECS|EKS))\b/i,
-                /\b(?:certified|licensed|accredited)\b/i
+                /\b(?:certified|licensed|accredited|tersertifikasi|bersertifikat|lisensi)\b/i
             ];
 
             let specificityCount = 0;
