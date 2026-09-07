@@ -192,12 +192,12 @@
 
             // Check for percentages
             if (/\d+%/.test(summaryText)) quantifiers.push('percentages');
-            // Check for dollar/currency amounts
-            if (/[$€£¥]\s?\d+|\d+\s?(?:million|billion|thousand|M|B|K)\b/i.test(summaryText)) quantifiers.push('monetary values');
-            // Check for years of experience
-            if (/\d+\+?\s*(?:years?|yrs?)\s*(?:of)?\s*(?:experience|expertise)/i.test(summaryText)) quantifiers.push('years of experience');
-            // Check for other numbers with context
-            if (/\d+\s*(?:projects?|clients?|teams?|people|members?|reports?|products?)/i.test(summaryText)) quantifiers.push('scale metrics');
+            // Check for dollar/currency amounts (IDR/Rp/Juta/Miliar)
+            if (/[$€£¥]\s?\d+|\d+\s?(?:million|billion|thousand|M|B|K)\b|Rp\.?\s*\d+|\d+\s*(?:Juta|Miliar|Triliun)\b/i.test(summaryText)) quantifiers.push('monetary values');
+            // Check for years of experience (years of experience / tahun pengalaman / pengalaman selama X tahun)
+            if (/\d+\+?\s*(?:years?|yrs?|tahun)\s*(?:of)?\s*(?:experience|expertise|pengalaman)/i.test(summaryText) || /(?:berpengalaman|pengalaman)(?:\s+(?:lebih\s+dari|selama))?\s+\d+\+?\s+tahun/i.test(summaryText)) quantifiers.push('years of experience');
+            // Check for other numbers with context (projects, teams, clients, proyek, tim, klien)
+            if (/\d+\s*(?:projects?|clients?|teams?|people|members?|reports?|products?|proyek|klien|tim|orang|anggota|produk)/i.test(summaryText)) quantifiers.push('scale metrics');
 
             if (quantifiers.length >= 2) {
                 return {
