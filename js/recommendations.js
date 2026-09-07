@@ -9,6 +9,9 @@ window.RecommendationsEngine = class RecommendationsEngine {
   // ── Generate Recommendations ──────────────────
 
   generate(results) {
+    const isID = results.region === 'ID';
+    const t = (en, id) => isID ? id : en;
+
     const recs = [];
     const cats = {};
 
@@ -29,7 +32,7 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'critical',
         category: 'Content',
-        title: 'Your CV is critically short',
+        title: t('Your CV is critically short', 'CV Anda terlalu singkat'),
         body: `Your CV contains only ~${wordCount} words. Most successful resumes have 400–700 words. A very short CV signals to recruiters that you lack experience or haven't invested effort. Add more detail to your work experience, skills, and achievements.`,
         icon: '🚨'
       });
@@ -40,8 +43,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'critical',
         category: 'Work Experience',
-        title: 'Add a Work Experience section',
-        body: 'Your CV appears to be missing a dedicated Work Experience section. This is the single most important section recruiters look for. Include your job titles, company names, dates, and bullet-pointed achievements for each role.',
+        title: t('Add a Work Experience section', 'Tambahkan bagian Pengalaman Kerja'),
+        body: t('Your CV appears to be missing a dedicated Work Experience section. This is the single most important section recruiters look for. Include your job titles, company names, dates, and bullet-pointed achievements for each role.', 'CV Anda tampaknya tidak memiliki bagian Pengalaman Kerja. Ini adalah bagian paling penting yang dicari oleh HRD. Cantumkan jabatan, nama perusahaan, tanggal, dan poin-poin pencapaian untuk setiap peran.'),
         icon: '💼'
       });
     }
@@ -51,8 +54,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'critical',
         category: 'Contact Information',
-        title: 'Include an email address',
-        body: 'No email address was detected. Without contact info, a recruiter literally cannot reach you. Place your professional email prominently at the top of your CV.',
+        title: t('Include an email address', 'Cantumkan alamat email'),
+        body: t('No email address was detected. Without contact info, a recruiter literally cannot reach you. Place your professional email prominently at the top of your CV.', 'Tidak ada alamat email yang terdeteksi. Tanpa info kontak, HRD tidak akan bisa menghubungi Anda. Letakkan email profesional Anda di bagian atas CV.'),
         icon: '📧'
       });
     }
@@ -62,8 +65,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'critical',
         category: 'Contact Information',
-        title: 'Add a phone number',
-        body: 'No phone number was detected. Many recruiters prefer to call candidates directly. Include a mobile number with your country code.',
+        title: t('Add a phone number', 'Tambahkan nomor telepon'),
+        body: t('No phone number was detected. Many recruiters prefer to call candidates directly. Include a mobile number with your country code.', 'Tidak ada nomor telepon yang terdeteksi. Banyak HRD lebih suka menelepon kandidat secara langsung. Cantumkan nomor HP Anda beserta kode negara.'),
         icon: '📱'
       });
     }
@@ -73,8 +76,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'critical',
         category: 'Education',
-        title: 'Include your Education',
-        body: 'No education section was found. Even if you\'re self-taught, include relevant coursework, bootcamps, or certifications. For experienced professionals, a brief education section is still expected.',
+        title: t('Include your Education', 'Cantumkan Pendidikan Anda'),
+        body: t('No education section was found. Even if you\'re self-taught, include relevant coursework, bootcamps, or certifications. For experienced professionals, a brief education section is still expected.', 'Tidak ada bagian pendidikan yang ditemukan. Walaupun Anda otodidak, cantumkan kursus, bootcamp, atau sertifikasi yang relevan. Untuk profesional yang sudah berpengalaman sekalipun, bagian pendidikan yang singkat tetap diharapkan.'),
         icon: '🎓'
       });
     }
@@ -86,8 +89,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'important',
         category: 'Skills',
-        title: 'Add a dedicated Skills section',
-        body: 'A clear skills section helps both ATS systems and recruiters quickly assess your capabilities. List technical skills, tools, and methodologies. Group them into categories (e.g., "Programming: Python, JavaScript, SQL").',
+        title: t('Add a dedicated Skills section', 'Tambahkan bagian Keahlian (Skills)'),
+        body: t('A clear skills section helps both ATS systems and recruiters quickly assess your capabilities. List technical skills, tools, and methodologies. Group them into categories (e.g., "Programming: Python, JavaScript, SQL").', 'Bagian keahlian yang jelas membantu sistem ATS dan HRD menilai kemampuan Anda dengan cepat. Tuliskan keahlian teknis, alat, dan metodologi. Kelompokkan ke dalam kategori (misal: "Pemrograman: Python, JavaScript, SQL").'),
         icon: '🛠️'
       });
     }
@@ -97,8 +100,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'important',
         category: 'Professional Summary',
-        title: 'Write a Professional Summary',
-        body: 'A 2–3 sentence summary at the top of your CV immediately tells the reader who you are and what value you bring. Example:\n\n✅ "Results-driven software engineer with 5+ years building scalable web applications. Expert in React and Node.js with a track record of reducing load times by 40%."\n\n❌ "Looking for a challenging position to utilize my skills."',
+        title: t('Write a Professional Summary', 'Tulis Profil Profesional (Summary)'),
+        body: t('A 2–3 sentence summary at the top of your CV immediately tells the reader who you are and what value you bring. Example:\n\n✅ "Results-driven software engineer with 5+ years building scalable web applications. Expert in React and Node.js with a track record of reducing load times by 40%."\n\n❌ "Looking for a challenging position to utilize my skills."', 'Ringkasan 2–3 kalimat di bagian atas CV Anda akan langsung memberitahu pembaca siapa Anda dan nilai apa yang Anda bawa. Contoh:\n\n✅ "Software engineer berorientasi hasil dengan 5+ tahun pengalaman membangun aplikasi web skala besar. Ahli dalam React dan Node.js dengan rekam jejak mengurangi waktu muat sebesar 40%."\n\n❌ "Mencari posisi menantang untuk memanfaatkan keahlian saya."'),
         icon: '📝'
       });
     }
@@ -111,8 +114,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'important',
         category: 'Language',
-        title: 'Use stronger action verbs',
-        body: 'Your CV lacks impactful action verbs. Start each bullet point with a powerful verb:\n\n✅ "Spearheaded migration to cloud infrastructure, reducing costs by 35%"\n❌ "Was responsible for cloud migration"\n\nGreat verbs to use: Led, Developed, Implemented, Optimized, Delivered, Achieved, Generated, Streamlined.',
+        title: t('Use stronger action verbs', 'Gunakan kata kerja aktif yang kuat'),
+        body: t('Your CV lacks impactful action verbs. Start each bullet point with a powerful verb:\n\n✅ "Spearheaded migration to cloud infrastructure, reducing costs by 35%"\n❌ "Was responsible for cloud migration"\n\nGreat verbs to use: Led, Developed, Implemented, Optimized, Delivered, Achieved, Generated, Streamlined.', 'CV Anda kekurangan kata kerja aktif yang berdampak. Awali setiap poin pengalaman dengan kata kerja yang kuat:\n\n✅ "Memimpin migrasi ke infrastruktur cloud, menghemat biaya hingga 35%"\n❌ "Bertanggung jawab atas migrasi cloud"\n\nKata kerja yang bagus digunakan: Memimpin, Mengembangkan, Mengimplementasikan, Mengoptimalkan, Menyelesaikan, Mencapai, Menghasilkan.'),
         icon: '💪'
       });
     }
@@ -123,8 +126,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'important',
         category: 'Content Quality',
-        title: 'Quantify your achievements',
-        body: 'Your CV lacks measurable results. Numbers make your impact concrete and believable:\n\n✅ "Increased user engagement by 47% through A/B testing"\n✅ "Managed a team of 12 engineers across 3 time zones"\n✅ "Reduced customer support tickets by 30% with automated FAQ system"\n\n❌ "Improved user engagement"\n❌ "Managed a large team"',
+        title: t('Quantify your achievements', 'Kuantifikasi pencapaian Anda'),
+        body: t('Your CV lacks measurable results. Numbers make your impact concrete and believable:\n\n✅ "Increased user engagement by 47% through A/B testing"\n✅ "Managed a team of 12 engineers across 3 time zones"\n✅ "Reduced customer support tickets by 30% with automated FAQ system"\n\n❌ "Improved user engagement"\n❌ "Managed a large team"', 'CV Anda kurang memiliki hasil yang terukur. Angka membuat dampak Anda menjadi konkret dan dapat dipercaya:\n\n✅ "Meningkatkan keterlibatan pengguna sebesar 47% melalui A/B testing"\n✅ "Memimpin tim berisi 12 engineer di 3 zona waktu"\n✅ "Mengurangi tiket keluhan pelanggan hingga 30% dengan sistem FAQ otomatis"\n\n❌ "Meningkatkan keterlibatan pengguna"\n❌ "Memimpin tim yang besar"'),
         icon: '📊'
       });
     }
@@ -134,8 +137,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'important',
         category: 'Contact Information',
-        title: 'Add your LinkedIn profile',
-        body: 'Over 87% of recruiters use LinkedIn to evaluate candidates. Include your LinkedIn URL (use a custom URL like linkedin.com/in/yourname). If relevant, also add a GitHub, portfolio, or personal website link.',
+        title: t('Add your LinkedIn profile', 'Tambahkan profil LinkedIn Anda'),
+        body: t('Over 87% of recruiters use LinkedIn to evaluate candidates. Include your LinkedIn URL (use a custom URL like linkedin.com/in/yourname). If relevant, also add a GitHub, portfolio, or personal website link.', 'Lebih dari 87% HRD menggunakan LinkedIn untuk mengevaluasi kandidat. Cantumkan URL LinkedIn Anda (gunakan URL kustom seperti linkedin.com/in/namaanda). Jika relevan, tambahkan juga link GitHub, portofolio, atau website pribadi.'),
         icon: '🔗'
       });
     }
@@ -145,8 +148,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'important',
         category: 'Format',
-        title: 'Consider shortening your CV',
-        body: `Your CV is quite long (~${wordCount} words). For most professionals with under 10 years of experience, a 1-page resume (400–700 words) performs best. Focus on your most recent and relevant roles. Remove outdated skills and early-career positions.`,
+        title: t('Consider shortening your CV', 'Pertimbangkan untuk mempersingkat CV Anda'),
+        body: t(`Your CV is quite long (~${wordCount} words). For most professionals with under 10 years of experience, a 1-page resume (400–700 words) performs best. Focus on your most recent and relevant roles. Remove outdated skills and early-career positions.`, `CV Anda cukup panjang (~${wordCount} kata). Untuk profesional dengan pengalaman di bawah 10 tahun, CV 1 halaman (400–700 kata) adalah yang terbaik. Fokuslah pada pengalaman Anda yang paling baru dan relevan. Hapus keterampilan yang sudah usang dan posisi di awal karir.`),
         icon: '✂️'
       });
     }
@@ -159,8 +162,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'nice',
         category: 'Format',
-        title: 'Use bullet points for readability',
-        body: 'Bullet points make your CV scannable — recruiters spend an average of 7 seconds on initial review. Convert paragraph text into concise, impactful bullet points. Aim for 3–6 bullets per role.',
+        title: t('Use bullet points for readability', 'Gunakan poin (bullet points) agar mudah dibaca'),
+        body: t('Bullet points make your CV scannable — recruiters spend an average of 7 seconds on initial review. Convert paragraph text into concise, impactful bullet points. Aim for 3–6 bullets per role.', 'Bullet points membuat CV Anda mudah dipindai — rata-rata HRD hanya menghabiskan 7 detik pada tinjauan awal. Ubah teks paragraf menjadi bullet points yang ringkas dan berdampak. Targetkan 3–6 poin untuk setiap peran/jabatan.'),
         icon: '📋'
       });
     }
@@ -170,8 +173,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'important',
         category: 'Content',
-        title: 'Include dates for your roles',
-        body: 'No employment dates were detected. Dates provide essential context about your career timeline. Use a consistent format like "Jan 2020 – Present" or "2018 – 2021". Gaps are less concerning than missing dates entirely.',
+        title: t('Include dates for your roles', 'Cantumkan tanggal/tahun untuk pengalaman kerja Anda'),
+        body: t('No employment dates were detected. Dates provide essential context about your career timeline. Use a consistent format like "Jan 2020 – Present" or "2018 – 2021". Gaps are less concerning than missing dates entirely.', 'Tidak ada tanggal bekerja yang terdeteksi. Tanggal memberikan konteks penting tentang lini masa karir Anda. Gunakan format yang konsisten seperti "Jan 2020 – Sekarang" atau "2018 – 2021". Celah/gap menganggur lebih tidak memusingkan dibandingkan tidak ada tanggal sama sekali.'),
         icon: '📅'
       });
     }
@@ -183,8 +186,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'nice',
         category: 'Online Presence',
-        title: 'Add a portfolio or GitHub link',
-        body: 'For technical and creative roles, a portfolio or GitHub profile can set you apart. It shows real work, not just claims. Even 2–3 well-documented projects can make a strong impression.',
+        title: t('Add a portfolio or GitHub link', 'Tambahkan link portofolio atau GitHub'),
+        body: t('For technical and creative roles, a portfolio or GitHub profile can set you apart. It shows real work, not just claims. Even 2–3 well-documented projects can make a strong impression.', 'Untuk peran teknis dan kreatif, profil portofolio atau GitHub dapat membuat Anda menonjol. Ini menunjukkan hasil kerja nyata, bukan sekadar klaim. Bahkan 2–3 proyek yang terdokumentasi dengan baik dapat memberikan kesan yang kuat.'),
         icon: '🌐'
       });
     }
@@ -194,8 +197,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'nice',
         category: 'Skills',
-        title: 'Categorize your skills',
-        body: 'Grouping skills into categories improves readability and ATS matching:\n\n✅ "Languages: Python, JavaScript, TypeScript\nFrameworks: React, Django, Express\nTools: Docker, AWS, Git"\n\n❌ "Python JavaScript TypeScript React Django Express Docker AWS Git"',
+        title: t('Categorize your skills', 'Kategorikan keahlian (skills) Anda'),
+        body: t('Grouping skills into categories improves readability and ATS matching:\n\n✅ "Languages: Python, JavaScript, TypeScript\nFrameworks: React, Django, Express\nTools: Docker, AWS, Git"\n\n❌ "Python JavaScript TypeScript React Django Express Docker AWS Git"', 'Mengelompokkan keterampilan ke dalam kategori akan meningkatkan keterbacaan dan kecocokan pada sistem ATS:\n\n✅ "Bahasa: Python, JavaScript, TypeScript\nFramework: React, Django, Express\nTools: Docker, AWS, Git"\n\n❌ "Python JavaScript TypeScript React Django Express Docker AWS Git"'),
         icon: '🗂️'
       });
     }
@@ -204,8 +207,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
     recs.push({
       priority: 'nice',
       category: 'ATS Optimization',
-      title: 'Tailor keywords to the job description',
-      body: 'ATS systems rank candidates by keyword match. Before applying, review the job posting and incorporate relevant keywords naturally into your experience and skills sections. Mirror the exact phrases used in the posting.',
+      title: t('Tailor keywords to the job description', 'Sesuaikan kata kunci (keywords) dengan deskripsi pekerjaan'),
+      body: t('ATS systems rank candidates by keyword match. Before applying, review the job posting and incorporate relevant keywords naturally into your experience and skills sections. Mirror the exact phrases used in the posting.', 'Sistem ATS memeringkat kandidat berdasarkan kecocokan kata kunci. Sebelum melamar, tinjau lowongan pekerjaan dan masukkan kata kunci yang relevan secara natural ke dalam bagian pengalaman dan keahlian Anda. Tiru frasa persis yang digunakan pada lowongan tersebut.'),
       icon: '🔑'
     });
 
@@ -214,8 +217,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'important',
         category: 'Format & Layout',
-        title: 'Improve your CV formatting',
-        body: 'Your format score is low. Use clear section headers, consistent spacing, a professional font (like Calibri, Arial, or Garamond), and adequate margins (0.5–1 inch). Avoid tables, images, and fancy templates that confuse ATS systems.',
+        title: t('Improve your CV formatting', 'Perbaiki format CV Anda'),
+        body: t('Your format score is low. Use clear section headers, consistent spacing, a professional font (like Calibri, Arial, or Garamond), and adequate margins (0.5–1 inch). Avoid tables, images, and fancy templates that confuse ATS systems.', 'Skor format/layout Anda rendah. Gunakan judul bagian yang jelas, spasi yang konsisten, font profesional (seperti Calibri, Arial, atau Garamond), dan margin yang memadai (1.5–2.5 cm). Hindari tabel, gambar, dan desain templat yang rumit yang dapat membingungkan sistem ATS.'),
         icon: '📐'
       });
     }
@@ -224,8 +227,8 @@ window.RecommendationsEngine = class RecommendationsEngine {
       recs.push({
         priority: 'important',
         category: 'Language & Writing',
-        title: 'Fix grammar and language issues',
-        body: 'Multiple language issues were detected. Spelling errors and grammar mistakes are among the top reasons recruiters reject CVs. Use a tool like Grammarly or have a friend proofread your document. Write in third person and use past tense for previous roles.',
+        title: t('Fix grammar and language issues', 'Perbaiki tata bahasa dan penulisan'),
+        body: t('Multiple language issues were detected. Spelling errors and grammar mistakes are among the top reasons recruiters reject CVs. Use a tool like Grammarly or have a friend proofread your document. Write in third person and use past tense for previous roles.', 'Beberapa masalah bahasa terdeteksi. Kesalahan ejaan dan tata bahasa adalah salah satu alasan utama HRD menolak CV. Gunakan alat seperti Grammarly (untuk bahasa Inggris) atau minta teman untuk membaca ulang dokumen Anda. Ingat untuk menulis tanpa kata ganti orang pertama (Saya/Aku).'),
         icon: '📖'
       });
     }
@@ -261,7 +264,12 @@ window.RecommendationsEngine = class RecommendationsEngine {
       card.style.animationDelay = `${index * 0.06}s`;
       card.style.animationFillMode = 'both';
 
-      const priorityLabels = {
+      const isID = (document.querySelector('.region-option.active') && document.querySelector('.region-option.active').dataset.region === 'ID');
+      const priorityLabels = isID ? {
+        critical: 'Kritis',
+        important: 'Penting',
+        nice: 'Saran Tambahan'
+      } : {
         critical: 'Critical',
         important: 'Important',
         nice: 'Nice to have'
